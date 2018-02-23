@@ -79,12 +79,11 @@ namespace TemperatureMonitor
 
             // Submit the login and parse the response
             response = request.GetResponse();
-            pageHtml.Load(response.GetResponseStream());
             response.Close();
 
             // Steal the request key and cookies for ourselves
-            AjaxRequestHeader = pageHtml.DocumentNode.Descendants("input").Where(i => i.GetAttributeValue("class", String.Empty).Equals("unique-form-key")).First().GetAttributeValue("value", String.Empty);
             CookieContainer = request.CookieContainer;
+            AjaxRequestHeader = CookieContainer.GetCookies(new Uri("https://www.alarm.com"))["afg"].Value;
         }
 
         public List<TemperatureSensorsData> GetSensorData(int temperatureSensorPollFrequency)
