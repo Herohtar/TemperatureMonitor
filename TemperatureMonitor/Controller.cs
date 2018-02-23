@@ -87,6 +87,7 @@ namespace TemperatureMonitor
             recordTemperatures(sensorData);
 
             Observable.Interval(TimeSpan.FromMinutes(5), DispatcherScheduler.Current).Subscribe(x => recordTemperatures(client.GetSensorData(0)));
+            Observable.Interval(TimeSpan.FromMinutes(1), DispatcherScheduler.Current).Subscribe(x => client.KeepAlive());
 
             IsStarted = true;
         }

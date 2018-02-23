@@ -23,6 +23,7 @@ namespace TemperatureMonitor
 
         private const string initialPageUrl = @"https://www.alarm.com/login.aspx";
         private const string loginFormUrl = @"https://www.alarm.com/web/Default.aspx";
+        private const string keepAliveUrl = @"https://www.alarm.com/web/KeepAlive.aspx";
         private const string temperatureSensorDataUrl = @"https://www.alarm.com/web/Dashboard/WebServices/Dashboard.asmx/TemperatureSensorDataRefresh";
         private const string userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0"; // An actual user agent string so our request looks like it's from a real browser
 
@@ -84,6 +85,19 @@ namespace TemperatureMonitor
             // Steal the request key and cookies for ourselves
             CookieContainer = request.CookieContainer;
             AjaxRequestHeader = CookieContainer.GetCookies(new Uri("https://www.alarm.com"))["afg"].Value;
+        }
+
+        public void KeepAlive()
+        {
+            string response = null;
+            try
+            {
+                response = UploadString(keepAliveUrl, String.Format("timestamp={0}", DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+            }
+            catch (WebException e)
+            {
+                System.Diagnostics.Debug.WriteLine(String.Format("{0}: Error - {1}", DateTime.Now, e.Message));
+            }
         }
 
         public List<TemperatureSensorsData> GetSensorData(int temperatureSensorPollFrequency)
