@@ -102,11 +102,16 @@
     <Compile Include="Enums.cs" />
     <Compile Include="GraphSettings.cs" />
     <Compile Include="GridLineConverter.cs" />
+    <Compile Include="JsonObjects\AvailableSystemItems.cs" />
+    <Compile Include="JsonObjects\Serialization.cs" />
+    <Compile Include="JsonObjects\Systems.cs" />
+    <Compile Include="JsonObjects\TemperatureSensorInfo.cs" />
+    <Compile Include="JsonObjects\ThermostatInfo.cs" />
     <Compile Include="PushBinding\FreezableBinding.cs" />
     <Compile Include="PushBinding\PushBinding.cs" />
     <Compile Include="PushBinding\PushBindingCollection.cs" />
     <Compile Include="PushBinding\PushBindingManager.cs" />
-    <Compile Include="ResponseObjects.cs" />
+    <Compile Include="JsonObjects\ResponseObjects.cs" />
     <Compile Include="SliderConverter.cs" />
     <Compile Include="TemperatureReadingConverter.cs" />
     <Compile Include="TemperatureSensor\TemperatureFormatConverter.cs" />

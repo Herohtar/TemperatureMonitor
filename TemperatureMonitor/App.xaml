@@ -15,8 +15,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <AlternationConverter x:Key="IndexToColor">
-                <SolidColorBrush>SteelBlue</SolidColorBrush>
-                <SolidColorBrush>MediumVioletRed</SolidColorBrush>
+                <SolidColorBrush>#FF1B9E77</SolidColorBrush>
+                <SolidColorBrush>#FFD95F02</SolidColorBrush>
+                <SolidColorBrush>#FF7570B3</SolidColorBrush>
+                <SolidColorBrush>#FFE7298A</SolidColorBrush>
+                <SolidColorBrush>#FF66A61E</SolidColorBrush>
             </AlternationConverter>
         </ResourceDictionary>
     </Application.Resources>

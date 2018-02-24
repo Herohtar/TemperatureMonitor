@@ -1,5 +1,4 @@
 ﻿using HtmlAgilityPack;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -10,6 +9,11 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using TemperatureMonitor.JsonObjects.ResponseData;
+using TemperatureMonitor.JsonObjects.AvailableSystemItems;
+using TemperatureMonitor.JsonObjects.Systems;
+using TemperatureMonitor.JsonObjects.ThermostatInfo;
+using TemperatureMonitor.JsonObjects.TemperatureSensorInfo;
 
 namespace TemperatureMonitor
 {
@@ -25,6 +29,11 @@ namespace TemperatureMonitor
         private const string loginFormUrl = @"https://www.alarm.com/web/Default.aspx";
         private const string keepAliveUrl = @"https://www.alarm.com/web/KeepAlive.aspx";
         private const string temperatureSensorDataUrl = @"https://www.alarm.com/web/Dashboard/WebServices/Dashboard.asmx/TemperatureSensorDataRefresh";
+        private const string availableSystemItemsUrl = @"https://www.alarm.com/web/api/systems/availableSystemItems";
+        private const string systemsUrl = @"https://www.alarm.com/web/api/systems/systems/";
+        private const string thermostatsUrl = @"https://www.alarm.com/web/api/devices/thermostats/";
+        private const string temperatureSensorsUrl = @"https://www.alarm.com/web/api/devices/remoteTemperatureSensors/";
+
         private const string userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0"; // An actual user agent string so our request looks like it's from a real browser
 
         public AlarmDotComWebClient(string username, string password, CookieContainer container, String ajax)
@@ -92,15 +101,53 @@ namespace TemperatureMonitor
             string response = null;
             try
             {
-                response = UploadString(keepAliveUrl, String.Format("timestamp={0}", DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+                response = UploadString(keepAliveUrl, $"timestamp={DateTimeOffset.Now.ToUnixTimeMilliseconds()}");
             }
             catch (WebException e)
             {
-                System.Diagnostics.Debug.WriteLine(String.Format("{0}: Error - {1}", DateTime.Now, e.Message));
+                System.Diagnostics.Debug.WriteLine($"{DateTime.Now}: Error - {e.Message}");
             }
         }
 
-        public List<TemperatureSensorsData> GetSensorData(int temperatureSensorPollFrequency)
+        public void GetSensors()
+        {
+            string response = null;
+            try
+            {
+                response = DownloadString(availableSystemItemsUrl);
+                AvailableSystemItems availableSystemItems = AvailableSystemItems.FromJson(response);
+                string systemId = availableSystemItems.Value[0].Id;
+                
+                response = DownloadString(systemsUrl + systemId);
+                Systems systems = Systems.FromJson(response);
+                List<Thermostat> thermostatIds = systems.Value.Thermostats;
+                List<JsonObjects.Systems.RemoteTemperatureSensor> temperatureSensorIds = systems.Value.RemoteTemperatureSensors;
+
+                List<ThermostatInfo> thermostats = new List<ThermostatInfo>();
+                foreach (Thermostat item in thermostatIds)
+                {
+                    response = DownloadString(thermostatsUrl + item.Id);
+                    ThermostatInfo thermostat = ThermostatInfo.FromJson(response);
+                    thermostats.Add(thermostat);
+                }
+
+                List<TemperatureSensorInfo> temperatureSensors = new List<TemperatureSensorInfo>();
+                foreach (JsonObjects.Systems.RemoteTemperatureSensor item in temperatureSensorIds)
+                {
+                    response = DownloadString(temperatureSensorsUrl + item.Id);
+                    TemperatureSensorInfo temperatureSensor = TemperatureSensorInfo.FromJson(response);
+                    temperatureSensors.Add(temperatureSensor);
+                }
+
+                Console.WriteLine("Done");
+            }
+            catch (WebException e)
+            {
+                System.Diagnostics.Debug.WriteLine($"{DateTime.Now}: Error - {e.Message}");
+            }
+        }
+
+        public List<TemperatureSensorsDatum> GetSensorData(int temperatureSensorPollFrequency)
         {
             string response = null;
             bool success = false;
@@ -108,19 +155,19 @@ namespace TemperatureMonitor
             {
                 try
                 {
-                    response = UploadString(temperatureSensorDataUrl, String.Format("{{\"temperaturesensorPollFrequency\":{0}}}", temperatureSensorPollFrequency));
+                    response = UploadString(temperatureSensorDataUrl, $"{{\"temperaturesensorPollFrequency\":{temperatureSensorPollFrequency}}}");
                     success = true;
                 }
                 catch (WebException e)
                 {
-                    System.Diagnostics.Debug.WriteLine(String.Format("{0}: Logging back in... {1}", DateTime.Now, e.Message));
+                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now}: Logging back in... {e.Message}");
                     Login();
                 }
             } while (!success);
 
-            RootObject root = JsonConvert.DeserializeObject<RootObject>(response);
+            ResponseData responseData = ResponseData.FromJson(response);
 
-            return root.d.responseObject.temperatureSensorsData;
+            return responseData.D.ResponseObject.TemperatureSensorsData;
         }
 
         public CookieContainer CookieContainer { get; private set; }

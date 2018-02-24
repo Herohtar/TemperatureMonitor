@@ -11,6 +11,7 @@ using TemperatureMonitor.Utilities;
 using System.Reactive.Concurrency;
 using System.Collections.ObjectModel;
 using MahApps.Metro.Controls.Dialogs;
+using TemperatureMonitor.JsonObjects.ResponseData;
 
 namespace TemperatureMonitor
 {
@@ -69,7 +70,7 @@ namespace TemperatureMonitor
                 }
             }
 
-            List<TemperatureSensorsData> sensorData = client.GetSensorData(0);
+            List<TemperatureSensorsDatum> sensorData = client.GetSensorData(0);
             sensorData.ForEach(sensor =>
             {
                 TemperatureSensor newSensor = new TemperatureSensor(sensor.Description, maxHistory);
@@ -92,7 +93,7 @@ namespace TemperatureMonitor
             IsStarted = true;
         }
 
-        private void recordTemperatures(List<TemperatureSensorsData> sensorData)
+        private void recordTemperatures(List<TemperatureSensorsDatum> sensorData)
         {
             DateTime pollTime = DateTime.Now; // Reported reading times are inconsistent and incorrect in some cases, so just use the current time when recording
             sensorData.ForEach(sensor =>
