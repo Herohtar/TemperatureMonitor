@@ -17,11 +17,7 @@ namespace TemperatureMonitor
     public class TemperatureSensor : NotifyDataErrorInfo<TemperatureSensor>
     {
         private string name;
-
         private int maxHistory;
-
-        private const int buffer = 2;
-
         private Subject<TemperatureReading> temperatureRecorded = new Subject<TemperatureReading>();
 
         public TemperatureSensor(string sensorName, int maxHistoryCount)
