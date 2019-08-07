@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 
 namespace TemperatureMonitor.Utilities
@@ -23,8 +20,8 @@ namespace TemperatureMonitor.Utilities
         /// </summary>
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
-            add { this.propertyChanged += value; }
-            remove { this.propertyChanged -= value; }
+            add { propertyChanged += value; }
+            remove { propertyChanged -= value; }
         }
 
         /// <summary>
@@ -64,12 +61,12 @@ namespace TemperatureMonitor.Utilities
         {
             get
             {
-                this.ThrowIfDisposed();
+                ThrowIfDisposed();
 
                 return Observable
                     .FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-                        h => this.propertyChanged += h,
-                        h => this.propertyChanged -= h)
+                        h => propertyChanged += h,
+                        h => propertyChanged -= h)
                     .Select(x => x.EventArgs.PropertyName);
             }
         }
@@ -104,15 +101,10 @@ namespace TemperatureMonitor.Utilities
         {
             Debug.Assert(
                 string.IsNullOrEmpty(propertyName) ||
-                (this.GetType().GetRuntimeProperty(propertyName) != null),
+                (GetType().GetRuntimeProperty(propertyName) != null),
                 "Check that the property name exists for this instance.");
 
-            PropertyChangedEventHandler eventHandler = this.propertyChanged;
-
-            if (eventHandler != null)
-            {
-                eventHandler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
@@ -128,7 +120,7 @@ namespace TemperatureMonitor.Utilities
 
             foreach (string propertyName in propertyNames)
             {
-                this.OnPropertyChanged(propertyName);
+                OnPropertyChanged(propertyName);
             }
         }
 
@@ -140,7 +132,7 @@ namespace TemperatureMonitor.Utilities
         {
             Debug.Assert(
                 string.IsNullOrEmpty(propertyName) ||
-                (this.GetType().GetRuntimeProperty(propertyName) != null),
+                (GetType().GetRuntimeProperty(propertyName) != null),
                 "Check that the property name exists for this instance.");
 
             // PropertyChangingEventHandler eventHandler = this.PropertyChanging;
@@ -164,7 +156,7 @@ namespace TemperatureMonitor.Utilities
 
             foreach (string propertyName in propertyNames)
             {
-                this.OnPropertyChanging(propertyName);
+                OnPropertyChanging(propertyName);
             }
         }
 
@@ -181,13 +173,13 @@ namespace TemperatureMonitor.Utilities
             TProp newValue,
             [CallerMemberName] string propertyName = null)
         {
-            this.ThrowIfDisposed();
+            ThrowIfDisposed();
 
-            if (!object.Equals(currentValue, newValue))
+            if (!Equals(currentValue, newValue))
             {
-                this.OnPropertyChanging(propertyName);
+                OnPropertyChanging(propertyName);
                 currentValue = newValue;
-                this.OnPropertyChanged(propertyName);
+                OnPropertyChanged(propertyName);
 
                 return true;
             }
@@ -208,13 +200,13 @@ namespace TemperatureMonitor.Utilities
             TProp newValue,
             params string[] propertyNames)
         {
-            this.ThrowIfDisposed();
+            ThrowIfDisposed();
 
-            if (!object.Equals(currentValue, newValue))
+            if (!Equals(currentValue, newValue))
             {
-                this.OnPropertyChanging(propertyNames);
+                OnPropertyChanging(propertyNames);
                 currentValue = newValue;
-                this.OnPropertyChanged(propertyNames);
+                OnPropertyChanged(propertyNames);
 
                 return true;
             }
@@ -234,16 +226,16 @@ namespace TemperatureMonitor.Utilities
             Action action,
             [CallerMemberName] string propertyName = null)
         {
-            this.ThrowIfDisposed();
+            ThrowIfDisposed();
 
             if (equal())
             {
                 return false;
             }
 
-            this.OnPropertyChanging(propertyName);
+            OnPropertyChanging(propertyName);
             action();
-            this.OnPropertyChanged(propertyName);
+            OnPropertyChanged(propertyName);
 
             return true;
         }
@@ -260,16 +252,16 @@ namespace TemperatureMonitor.Utilities
             Action action,
             params string[] propertyNames)
         {
-            this.ThrowIfDisposed();
+            ThrowIfDisposed();
 
             if (equal())
             {
                 return false;
             }
 
-            this.OnPropertyChanging(propertyNames);
+            OnPropertyChanging(propertyNames);
             action();
-            this.OnPropertyChanged(propertyNames);
+            OnPropertyChanged(propertyNames);
 
             return true;
         }
