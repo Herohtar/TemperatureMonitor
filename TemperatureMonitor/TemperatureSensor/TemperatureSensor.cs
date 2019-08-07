@@ -24,15 +24,13 @@ namespace TemperatureMonitor
 
         private Subject<TemperatureReading> temperatureRecorded = new Subject<TemperatureReading>();
 
-        private List<TemperatureReading> temperatureReadings;
-
         public TemperatureSensor(string sensorName, int maxHistoryCount)
         {
             name = sensorName;
 
             maxHistory = maxHistoryCount;
 
-            temperatureReadings = new List<TemperatureReading>();
+            TemperatureReadings = new List<TemperatureReading>();
         }
 
         public string Name
@@ -71,10 +69,7 @@ namespace TemperatureMonitor
             }
         }
 
-        public List<TemperatureReading> TemperatureReadings
-        {
-            get { return temperatureReadings; }
-        }
+        public List<TemperatureReading> TemperatureReadings { get; }
 
         public double CurrentTemperature
         {
