@@ -18,7 +18,6 @@ namespace TemperatureMonitor
     public class Controller : NotifyDataErrorInfo<Controller>
     {
         private IDialogCoordinator dialogs;
-        private ObservableCollection<TemperatureSensor> sensors;
         private AlarmDotComWebClient client;
 
         private const int maxHistory = 0;
@@ -28,7 +27,7 @@ namespace TemperatureMonitor
         public Controller(IDialogCoordinator dialogCoordinator)
         {
             dialogs = dialogCoordinator;
-            sensors = new ObservableCollection<TemperatureSensor>();
+            Sensors = new ObservableCollection<TemperatureSensor>();
 
             GraphSettings.Buffer = 2;
         }
@@ -40,7 +39,7 @@ namespace TemperatureMonitor
             bool success = false;
             while (!success)
             {
-                data = await dialogs.ShowLoginAsync(this, "Login", String.Empty, new LoginDialogSettings { AnimateShow = false, AnimateHide = false, NegativeButtonText = "Exit", NegativeButtonVisibility = Visibility.Visible });
+                data = await dialogs.ShowLoginAsync(this, "Login", string.Empty, new LoginDialogSettings { AnimateShow = false, AnimateHide = false, NegativeButtonText = "Exit", NegativeButtonVisibility = Visibility.Visible });
                 if (data == null)
                 {
                     Application.Current.Shutdown();
@@ -102,10 +101,7 @@ namespace TemperatureMonitor
             });
         }
 
-        public ObservableCollection<TemperatureSensor> Sensors
-        {
-            get { return sensors; }
-        }
+        public ObservableCollection<TemperatureSensor> Sensors { get; }
 
         public bool IsStarted
         {
