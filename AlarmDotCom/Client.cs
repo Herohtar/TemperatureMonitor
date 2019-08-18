@@ -1,26 +1,23 @@
-﻿using HtmlAgilityPack;
+﻿using AlarmDotCom.JsonObjects.AvailableSystemItems;
+using AlarmDotCom.JsonObjects.ResponseData;
+using AlarmDotCom.JsonObjects.Systems;
+using AlarmDotCom.JsonObjects.TemperatureSensorInfo;
+using AlarmDotCom.JsonObjects.ThermostatInfo;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using TemperatureMonitor.JsonObjects.ResponseData;
-using TemperatureMonitor.JsonObjects.AvailableSystemItems;
-using TemperatureMonitor.JsonObjects.Systems;
-using TemperatureMonitor.JsonObjects.ThermostatInfo;
-using TemperatureMonitor.JsonObjects.TemperatureSensorInfo;
 
-namespace TemperatureMonitor
+namespace AlarmDotCom
 {
     /// <summary>
     /// Alarm.com doesn't provide a public API. This class allows you to log in and obtain a valid session for making JSON requests
     /// </summary>
-    public class AlarmDotComWebClient : WebClient
+    public class Client : WebClient
     {
         private string un;
         private string pw;
@@ -36,7 +33,7 @@ namespace TemperatureMonitor
 
         private const string userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0"; // An actual user agent string so our request looks like it's from a real browser
 
-        public AlarmDotComWebClient(string username, string password, CookieContainer container, String ajax)
+        public Client(string username, string password, CookieContainer container, String ajax)
         {
             CookieContainer = container;
             AjaxRequestHeader = ajax;
@@ -44,7 +41,7 @@ namespace TemperatureMonitor
             pw = password;
         }
 
-        public AlarmDotComWebClient(string username, string password)
+        public Client(string username, string password)
           : this(username, password, new CookieContainer(), String.Empty)
         { }
 
@@ -117,7 +114,7 @@ namespace TemperatureMonitor
                 response = DownloadString(availableSystemItemsUrl);
                 AvailableSystemItems availableSystemItems = AvailableSystemItems.FromJson(response);
                 string systemId = availableSystemItems.Value[0].Id;
-                
+
                 response = DownloadString(systemsUrl + systemId);
                 Systems systems = Systems.FromJson(response);
                 List<Thermostat> thermostatIds = systems.Value.Thermostats;

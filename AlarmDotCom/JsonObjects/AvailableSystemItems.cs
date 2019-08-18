@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TemperatureMonitor.JsonObjects.AvailableSystemItems
+namespace AlarmDotCom.JsonObjects.AvailableSystemItems
 {
     public partial class AvailableSystemItems
     {

@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System.Globalization;
 
-namespace TemperatureMonitor.JsonObjects
+namespace AlarmDotCom.JsonObjects
 {
     public static class Serialize
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
  * Representation of the JSON object returned from Alarm.com
  * Auto-generated with http://json2csharp.com/
  */
-namespace TemperatureMonitor.JsonObjects.ResponseData
+namespace AlarmDotCom.JsonObjects.ResponseData
 {
     public partial class ResponseData
     {

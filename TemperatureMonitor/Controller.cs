@@ -11,14 +11,15 @@ using TemperatureMonitor.Utilities;
 using System.Reactive.Concurrency;
 using System.Collections.ObjectModel;
 using MahApps.Metro.Controls.Dialogs;
-using TemperatureMonitor.JsonObjects.ResponseData;
+using AlarmDotCom;
+using AlarmDotCom.JsonObjects.ResponseData;
 
 namespace TemperatureMonitor
 {
     public class Controller : NotifyDataErrorInfo<Controller>
     {
         private IDialogCoordinator dialogs;
-        private AlarmDotComWebClient client;
+        private Client client;
 
         private const int maxHistory = 0;
 
@@ -50,7 +51,7 @@ namespace TemperatureMonitor
                     ProgressDialogController progress = await dialogs.ShowProgressAsync(this, "Logging in...", "Connecting to Alarm.com", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = false });
                     progress.SetIndeterminate();
 
-                    client = new AlarmDotComWebClient(data.Username, data.Password);
+                    client = new Client(data.Username, data.Password);
                     try
                     {
                         await Task.Run(() => client.Login());

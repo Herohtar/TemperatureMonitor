@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace TemperatureMonitor.JsonObjects.ThermostatInfo
+namespace AlarmDotCom.JsonObjects.ThermostatInfo
 {
     public partial class ThermostatInfo
     {

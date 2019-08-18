@@ -100,16 +100,10 @@
     <Compile Include="Enums.cs" />
     <Compile Include="GraphSettings.cs" />
     <Compile Include="GridLineConverter.cs" />
-    <Compile Include="JsonObjects\AvailableSystemItems.cs" />
-    <Compile Include="JsonObjects\Serialization.cs" />
-    <Compile Include="JsonObjects\Systems.cs" />
-    <Compile Include="JsonObjects\TemperatureSensorInfo.cs" />
-    <Compile Include="JsonObjects\ThermostatInfo.cs" />
     <Compile Include="PushBinding\FreezableBinding.cs" />
     <Compile Include="PushBinding\PushBinding.cs" />
     <Compile Include="PushBinding\PushBindingCollection.cs" />
     <Compile Include="PushBinding\PushBindingManager.cs" />
-    <Compile Include="JsonObjects\ResponseObjects.cs" />
     <Compile Include="SliderConverter.cs" />
     <Compile Include="TemperatureReadingConverter.cs" />
     <Compile Include="TemperatureSensor\TemperatureFormatConverter.cs" />
@@ -127,9 +121,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AlarmDotComWebClient.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -167,6 +158,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlarmDotCom\AlarmDotCom.csproj">
+      <Project>{0cf29c2f-683b-4e4e-bbe4-6ce1a9114a2f}</Project>
+      <Name>AlarmDotCom</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
