@@ -22,6 +22,7 @@ namespace AlarmDotCom
         private string un;
         private string pw;
 
+        private const string rootUrl = @"https://www.alarm.com";
         private const string initialPageUrl = @"https://www.alarm.com/login.aspx";
         private const string loginFormUrl = @"https://www.alarm.com/web/Default.aspx";
         private const string keepAliveUrl = @"https://www.alarm.com/web/KeepAlive.aspx";
@@ -90,15 +91,14 @@ namespace AlarmDotCom
 
             // Steal the request key and cookies for ourselves
             CookieContainer = request.CookieContainer;
-            AjaxRequestHeader = CookieContainer.GetCookies(new Uri("https://www.alarm.com"))["afg"].Value;
+            AjaxRequestHeader = CookieContainer.GetCookies(new Uri(rootUrl))["afg"].Value;
         }
 
         public void KeepAlive()
         {
-            string response = null;
             try
             {
-                response = UploadString(keepAliveUrl, $"timestamp={DateTimeOffset.Now.ToUnixTimeMilliseconds()}");
+                string response = UploadString(keepAliveUrl, $"timestamp={DateTimeOffset.Now.ToUnixTimeMilliseconds()}");
             }
             catch (WebException e)
             {
@@ -108,10 +108,9 @@ namespace AlarmDotCom
 
         public void GetSensors()
         {
-            string response = null;
             try
             {
-                response = DownloadString(availableSystemItemsUrl);
+                string response = DownloadString(availableSystemItemsUrl);
                 AvailableSystemItems availableSystemItems = AvailableSystemItems.FromJson(response);
                 string systemId = availableSystemItems.Value[0].Id;
 
@@ -135,8 +134,6 @@ namespace AlarmDotCom
                     TemperatureSensorInfo temperatureSensor = TemperatureSensorInfo.FromJson(response);
                     temperatureSensors.Add(temperatureSensor);
                 }
-
-                Console.WriteLine("Done");
             }
             catch (WebException e)
             {
@@ -169,7 +166,7 @@ namespace AlarmDotCom
 
         public CookieContainer CookieContainer { get; private set; }
 
-        public String AjaxRequestHeader { get; private set; }
+        public string AjaxRequestHeader { get; private set; }
 
         protected override WebRequest GetWebRequest(Uri address)
         {
