@@ -48,8 +48,8 @@ namespace AlarmDotCom
 
         public void Login()
         {
-            NameValueCollection loginData = new NameValueCollection();
-            HtmlDocument pageHtml = new HtmlDocument();
+            var loginData = new NameValueCollection();
+            var pageHtml = new HtmlDocument();
             HttpWebRequest request;
             WebResponse response;
 
@@ -76,10 +76,10 @@ namespace AlarmDotCom
             request.Referer = initialPageUrl;
 
             // Write the header
-            string data = string.Join("&", loginData.Cast<string>().Select(key => $"{key}={loginData[key]}"));
-            byte[] buffer = Encoding.ASCII.GetBytes(data);
+            var data = string.Join("&", loginData.Cast<string>().Select(key => $"{key}={loginData[key]}"));
+            var buffer = Encoding.ASCII.GetBytes(data);
             request.ContentLength = buffer.Length;
-            Stream requestStream = request.GetRequestStream();
+            var requestStream = request.GetRequestStream();
             requestStream.Write(buffer, 0, buffer.Length);
             requestStream.Close();
 
@@ -98,7 +98,7 @@ namespace AlarmDotCom
         {
             try
             {
-                string response = UploadString(keepAliveUrl, $"timestamp={DateTimeOffset.Now.ToUnixTimeMilliseconds()}");
+                var response = UploadString(keepAliveUrl, $"timestamp={DateTimeOffset.Now.ToUnixTimeMilliseconds()}");
             }
             catch (WebException e)
             {
@@ -110,28 +110,28 @@ namespace AlarmDotCom
         {
             try
             {
-                string response = DownloadString(availableSystemItemsUrl);
-                AvailableSystemItems availableSystemItems = AvailableSystemItems.FromJson(response);
-                string systemId = availableSystemItems.Value[0].Id;
+                var response = DownloadString(availableSystemItemsUrl);
+                var availableSystemItems = AvailableSystemItems.FromJson(response);
+                var systemId = availableSystemItems.Value[0].Id;
 
                 response = DownloadString(systemsUrl + systemId);
-                Systems systems = Systems.FromJson(response);
-                List<Thermostat> thermostatIds = systems.Value.Thermostats;
-                List<JsonObjects.Systems.RemoteTemperatureSensor> temperatureSensorIds = systems.Value.RemoteTemperatureSensors;
+                var systems = Systems.FromJson(response);
+                var thermostatIds = systems.Value.Thermostats;
+                var temperatureSensorIds = systems.Value.RemoteTemperatureSensors;
 
-                List<ThermostatInfo> thermostats = new List<ThermostatInfo>();
-                foreach (Thermostat item in thermostatIds)
+                var thermostats = new List<ThermostatInfo>();
+                foreach (var item in thermostatIds)
                 {
                     response = DownloadString(thermostatsUrl + item.Id);
-                    ThermostatInfo thermostat = ThermostatInfo.FromJson(response);
+                    var thermostat = ThermostatInfo.FromJson(response);
                     thermostats.Add(thermostat);
                 }
 
-                List<TemperatureSensorInfo> temperatureSensors = new List<TemperatureSensorInfo>();
-                foreach (JsonObjects.Systems.RemoteTemperatureSensor item in temperatureSensorIds)
+                var temperatureSensors = new List<TemperatureSensorInfo>();
+                foreach (var item in temperatureSensorIds)
                 {
                     response = DownloadString(temperatureSensorsUrl + item.Id);
-                    TemperatureSensorInfo temperatureSensor = TemperatureSensorInfo.FromJson(response);
+                    var temperatureSensor = TemperatureSensorInfo.FromJson(response);
                     temperatureSensors.Add(temperatureSensor);
                 }
             }
@@ -144,7 +144,7 @@ namespace AlarmDotCom
         public List<TemperatureSensorsDatum> GetSensorData(int temperatureSensorPollFrequency)
         {
             string response = null;
-            bool success = false;
+            var success = false;
             do
             {
                 try
@@ -159,7 +159,7 @@ namespace AlarmDotCom
                 }
             } while (!success);
 
-            ResponseData responseData = ResponseData.FromJson(response);
+            var responseData = ResponseData.FromJson(response);
 
             return responseData.D.ResponseObject.TemperatureSensorsData;
         }
