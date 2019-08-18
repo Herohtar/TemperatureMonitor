@@ -1,4 +1,4 @@
-using AlarmDotCom.JsonObjects.AvailableSystemItems;
+﻿using AlarmDotCom.JsonObjects.AvailableSystemItems;
 using AlarmDotCom.JsonObjects.ResponseData;
 using AlarmDotCom.JsonObjects.Systems;
 using AlarmDotCom.JsonObjects.TemperatureSensorInfo;
@@ -116,24 +116,12 @@ namespace AlarmDotCom
 
                 response = DownloadString(string.Concat(systemsUrl, systemId));
                 var systems = Systems.FromJson(response);
-                var thermostatIds = systems.Value.Thermostats;
-                var temperatureSensorIds = systems.Value.RemoteTemperatureSensors;
-
-                var thermostats = new List<ThermostatInfo>();
-                foreach (var item in thermostatIds)
-                {
-                    response = DownloadString(string.Concat(thermostatsUrl, item.Id));
-                    var thermostat = ThermostatInfo.FromJson(response);
-                    thermostats.Add(thermostat);
-                }
-
-                var temperatureSensors = new List<TemperatureSensorInfo>();
-                foreach (var item in temperatureSensorIds)
-                {
-                    response = DownloadString(string.Concat(temperatureSensorsUrl, item.Id));
-                    var temperatureSensor = TemperatureSensorInfo.FromJson(response);
-                    temperatureSensors.Add(temperatureSensor);
-                }
+                var thermostats = (from thermostat in systems.Value.Thermostats
+                                   select ThermostatInfo.FromJson(DownloadString(string.Concat(thermostatsUrl, thermostat.Id)))
+                                   ).ToList();
+                var temperatureSensors = (from temperatureSensor in systems.Value.RemoteTemperatureSensors
+                                          select TemperatureSensorInfo.FromJson(DownloadString(string.Concat(temperatureSensorsUrl, temperatureSensor.Id)))
+                                          ).ToList();
             }
             catch (WebException e)
             {
