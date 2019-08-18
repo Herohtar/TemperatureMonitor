@@ -1,4 +1,4 @@
-﻿using AlarmDotCom.JsonObjects.AvailableSystemItems;
+using AlarmDotCom.JsonObjects.AvailableSystemItems;
 using AlarmDotCom.JsonObjects.ResponseData;
 using AlarmDotCom.JsonObjects.Systems;
 using AlarmDotCom.JsonObjects.TemperatureSensorInfo;
@@ -34,7 +34,7 @@ namespace AlarmDotCom
 
         private const string userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0"; // An actual user agent string so our request looks like it's from a real browser
 
-        public Client(string username, string password, CookieContainer container, String ajax)
+        public Client(string username, string password, CookieContainer container, string ajax)
         {
             CookieContainer = container;
             AjaxRequestHeader = ajax;
@@ -43,7 +43,7 @@ namespace AlarmDotCom
         }
 
         public Client(string username, string password)
-          : this(username, password, new CookieContainer(), String.Empty)
+          : this(username, password, new CookieContainer(), string.Empty)
         { }
 
         public void Login()
@@ -62,7 +62,7 @@ namespace AlarmDotCom
             // Parse the response and create the login headers
             pageHtml.Load(response.GetResponseStream());
             // We need all the hidden ASP.NET state/event values. Grab everything that starts with double underscores just to make sure we get everything
-            pageHtml.DocumentNode.Descendants("input").Where(i => i.Id.StartsWith("__")).ToList().ForEach(i => loginData.Add(i.Id, i.GetAttributeValue("value", String.Empty)));
+            pageHtml.DocumentNode.Descendants("input").Where(i => i.Id.StartsWith("__")).ToList().ForEach(i => loginData.Add(i.Id, i.GetAttributeValue("value", string.Empty)));
             loginData.Add("IsFromNewSite", "1"); // Not sure what this does exactly, but it seems necessary to include it
             loginData.Add("JavaScriptTest", "1"); // Lie and say we support JavaScript
             loginData.Add("ctl00$ContentPlaceHolder1$loginform$txtUserName", un); // Username
@@ -114,7 +114,7 @@ namespace AlarmDotCom
                 var availableSystemItems = AvailableSystemItems.FromJson(response);
                 var systemId = availableSystemItems.Value[0].Id;
 
-                response = DownloadString(systemsUrl + systemId);
+                response = DownloadString(string.Concat(systemsUrl, systemId));
                 var systems = Systems.FromJson(response);
                 var thermostatIds = systems.Value.Thermostats;
                 var temperatureSensorIds = systems.Value.RemoteTemperatureSensors;
@@ -122,7 +122,7 @@ namespace AlarmDotCom
                 var thermostats = new List<ThermostatInfo>();
                 foreach (var item in thermostatIds)
                 {
-                    response = DownloadString(thermostatsUrl + item.Id);
+                    response = DownloadString(string.Concat(thermostatsUrl, item.Id));
                     var thermostat = ThermostatInfo.FromJson(response);
                     thermostats.Add(thermostat);
                 }
@@ -130,7 +130,7 @@ namespace AlarmDotCom
                 var temperatureSensors = new List<TemperatureSensorInfo>();
                 foreach (var item in temperatureSensorIds)
                 {
-                    response = DownloadString(temperatureSensorsUrl + item.Id);
+                    response = DownloadString(string.Concat(temperatureSensorsUrl, item.Id));
                     var temperatureSensor = TemperatureSensorInfo.FromJson(response);
                     temperatureSensors.Add(temperatureSensor);
                 }
