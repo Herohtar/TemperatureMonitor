@@ -37,7 +37,7 @@ namespace TemperatureMonitor
         {
             LoginDialogData data;
 
-            bool success = false;
+            var success = false;
             while (!success)
             {
                 data = await dialogs.ShowLoginAsync(this, "Login", string.Empty, new LoginDialogSettings { AnimateShow = false, AnimateHide = false, NegativeButtonText = "Exit", NegativeButtonVisibility = Visibility.Visible });
@@ -48,7 +48,7 @@ namespace TemperatureMonitor
                 }
                 else
                 {
-                    ProgressDialogController progress = await dialogs.ShowProgressAsync(this, "Logging in...", "Connecting to Alarm.com", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = false });
+                    var progress = await dialogs.ShowProgressAsync(this, "Logging in...", "Connecting to Alarm.com", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = false });
                     progress.SetIndeterminate();
 
                     client = new Client(data.Username, data.Password);
@@ -70,10 +70,10 @@ namespace TemperatureMonitor
                 }
             }
 
-            List<TemperatureSensorsDatum> sensorData = client.GetSensorData(0);
+            var sensorData = client.GetSensorData(0);
             sensorData.ForEach(sensor =>
             {
-                TemperatureSensor newSensor = new TemperatureSensor(sensor.Description, maxHistory);
+                var newSensor = new TemperatureSensor(sensor.Description, maxHistory);
                 newSensor.WhenTemperatureRecorded.Subscribe(r =>
                 {
                     Max = (int)Sensors.SelectMany(s => s.TemperatureReadings).Max(reading => reading.Temperature) + GraphSettings.Buffer;
@@ -95,7 +95,7 @@ namespace TemperatureMonitor
 
         private void recordTemperatures(List<TemperatureSensorsDatum> sensorData)
         {
-            DateTime pollTime = DateTime.Now; // Reported reading times are inconsistent and incorrect in some cases, so just use the current time when recording
+            var pollTime = DateTime.Now; // Reported reading times are inconsistent and incorrect in some cases, so just use the current time when recording
             sensorData.ForEach(sensor =>
             {
                 Sensors.Single(s => s.Name.Equals(sensor.Description)).RecordTemperature(sensor.LastKnownReading, pollTime);
