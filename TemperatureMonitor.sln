@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemperatureMonitor", "TemperatureMonitor\TemperatureMonitor.csproj", "{57561826-1E41-40EE-A73D-D4D9EAC6A7A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlarmDotCom", "AlarmDotCom\AlarmDotCom.csproj", "{0CF29C2F-683B-4E4E-BBE4-6CE1A9114A2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlarmDotCom", "AlarmDotCom\AlarmDotCom.csproj", "{F0166978-C1DB-4A5E-BC27-5F37AF6FE7D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{57561826-1E41-40EE-A73D-D4D9EAC6A7A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57561826-1E41-40EE-A73D-D4D9EAC6A7A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57561826-1E41-40EE-A73D-D4D9EAC6A7A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CF29C2F-683B-4E4E-BBE4-6CE1A9114A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CF29C2F-683B-4E4E-BBE4-6CE1A9114A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CF29C2F-683B-4E4E-BBE4-6CE1A9114A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CF29C2F-683B-4E4E-BBE4-6CE1A9114A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0166978-C1DB-4A5E-BC27-5F37AF6FE7D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0166978-C1DB-4A5E-BC27-5F37AF6FE7D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0166978-C1DB-4A5E-BC27-5F37AF6FE7D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0166978-C1DB-4A5E-BC27-5F37AF6FE7D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

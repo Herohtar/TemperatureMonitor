@@ -161,7 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AlarmDotCom\AlarmDotCom.csproj">
-      <Project>{0cf29c2f-683b-4e4e-bbe4-6ce1a9114a2f}</Project>
+      <Project>{f0166978-c1db-4a5e-bc27-5f37af6fe7d3}</Project>
       <Name>AlarmDotCom</Name>
     </ProjectReference>
   </ItemGroup>
