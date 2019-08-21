@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace TemperatureMonitor
@@ -24,7 +25,7 @@ namespace TemperatureMonitor
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : MetroWindow
     {
         private Controller controller;
 
