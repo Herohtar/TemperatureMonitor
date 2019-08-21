@@ -117,7 +117,7 @@
                 </ItemsControl>
             </Grid>
         </Border>
-        <Controls:RangeSlider Grid.Column="1" Grid.Row="1" Name="scaleSlider" Margin="0 0 5 5" Minimum="0" Maximum="1" MinRange="0.001" MinRangeWidth="10" LowerValue="0" UpperValue="1" />
+        <Controls:RangeSlider Grid.Column="1" Grid.Row="1" Name="scaleSlider" Margin="0 0 5 5" Minimum="0" Maximum="1" MinRange="0.001" MinRangeWidth="10" LowerValue="0" UpperValue="1" Style="{DynamicResource MahApps.Styles.RangeSlider.Win10}" />
         <TextBlock Grid.Column="1" Grid.Row="2" Margin="0 0 0 5">
             <TextBlock.Text>
                 <MultiBinding Converter="{local:SliderConverter}" ConverterParameter="start">
