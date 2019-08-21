@@ -10,31 +10,34 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
+  projects: '**/*.csproj'
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
+- checkout: self
+  submodules: true
 
-- task: NuGetCommand@2
+- task: UseDotNet@2
+  displayName: 'Use .NET Core 3.x'
   inputs:
-    restoreSolution: '$(solution)'
+    version: 3.x
+    includePreviewVersions: true
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: build
+    projects: '$(projects)'
+    arguments: '-c $(buildConfiguration)'
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**/bin/$(BuildConfiguration)/**/?(*.exe|*.dll|*.pdb)'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    FlattenFolders: true
+# - task: CopyFiles@2
+#   inputs:
+#     SourceFolder: '$(Build.SourcesDirectory)'
+#     Contents: '**/bin/$(BuildConfiguration)/**/?(*.exe|*.dll|*.pdb)'
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+#     FlattenFolders: true
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)'
-    artifact: '$(BuildConfiguration)'
+# - task: PublishPipelineArtifact@1
+#   inputs:
+#     targetPath: '$(Build.ArtifactStagingDirectory)'
+#     artifact: '$(BuildConfiguration)'
