@@ -69,13 +69,13 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GraphSettings.cs" />
-    <Compile Include="GridLineConverter.cs" />
+    <Compile Include="Converters\GridLineConverter.cs" />
     <Compile Include="PushBinding\FreezableBinding.cs" />
     <Compile Include="PushBinding\PushBinding.cs" />
     <Compile Include="PushBinding\PushBindingCollection.cs" />
     <Compile Include="PushBinding\PushBindingManager.cs" />
-    <Compile Include="SliderConverter.cs" />
-    <Compile Include="TemperatureReadingConverter.cs" />
+    <Compile Include="Converters\SliderConverter.cs" />
+    <Compile Include="Converters\TemperatureReadingConverter.cs" />
     <Compile Include="TemperatureSensor\TemperatureFormatConverter.cs" />
     <Compile Include="TemperatureSensor\TemperatureReading.cs" />
     <Compile Include="TemperatureSensor\TemperatureSensor.cs" />
@@ -83,7 +83,7 @@
       <DependentUpon>TemperatureSensorDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="TemperatureSensor\TemperatureSettings.cs" />
-    <Compile Include="TransformConverter.cs" />
+    <Compile Include="Converters\TransformConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
