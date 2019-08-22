@@ -15,7 +15,7 @@ variables:
 
 steps:
 - checkout: self
-  submodules: true
+  submodules: recursive
 
 - task: UseDotNet@2
   displayName: 'Use .NET Core 3.x'
