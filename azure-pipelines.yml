@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  projects: '**/*.csproj'
+  solution: '**/*.sln'
   buildConfiguration: 'Release'
 
 steps:
@@ -24,10 +24,17 @@ steps:
     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
-  displayName: Build
+  inputs:
+    command: restore
+
+- task: DotNetCoreCLI@2
   inputs:
     command: build
-    projects: '$(projects)'
+    arguments: '-c $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
     arguments: '-c $(buildConfiguration)'
 
 # - task: CopyFiles@2
