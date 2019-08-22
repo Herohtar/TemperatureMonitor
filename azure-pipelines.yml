@@ -24,15 +24,18 @@ steps:
     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
+  displayName: Restore
   inputs:
     command: restore
 
 - task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
     command: build
     arguments: '-c $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: Publish
   inputs:
     command: publish
     arguments: '-c $(buildConfiguration)'
