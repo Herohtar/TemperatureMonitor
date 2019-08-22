@@ -43,14 +43,14 @@ steps:
     publishWebProjects: false
     zipAfterPublish: false
 
- - task: CopyFiles@2
-   inputs:
-     SourceFolder: '$(Build.SourcesDirectory)'
-     Contents: '$(publishProject)/bin/$(BuildConfiguration)/**/publish/?(*.exe|*.dll|*.pdb)'
-     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-     FlattenFolders: true
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '$(publishProject)/bin/$(buildConfiguration)/**/publish/?(*.exe|*.dll|*.pdb)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    FlattenFolders: true
 
- - task: PublishPipelineArtifact@1
-   inputs:
-     targetPath: '$(Build.ArtifactStagingDirectory)'
-     artifact: '$(BuildConfiguration)'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: '$(buildConfiguration)'
