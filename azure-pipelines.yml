@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
+  publishProject: 'TemperatureMonitor'
   buildConfiguration: 'Release'
 
 steps:
@@ -38,6 +38,7 @@ steps:
   displayName: Publish
   inputs:
     command: publish
+    projects: '$(publishProject)'
     arguments: '-c $(buildConfiguration)'
     publishWebProjects: false
     zipAfterPublish: false
