@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TemperatureMonitor"
+        xmlns:pb="clr-namespace:PushBindingExtension;assembly=PushBinding"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
         Dialog:DialogParticipation.Register="{Binding}"
@@ -36,10 +37,10 @@
         </ItemsControl>
         <Border Name="Graph" Margin="0 5 5 5" Grid.Column="1" BorderThickness="2" BorderBrush="#3FFFFFFF" CornerRadius="4" ClipToBounds="True">
             <Grid>
-                <local:PushBindingManager.PushBindings>
-                    <local:PushBinding TargetProperty="ActualWidth" Path="GraphWidth" />
-                    <local:PushBinding TargetProperty="ActualHeight" Path="GraphHeight" />
-                </local:PushBindingManager.PushBindings>
+                <pb:PushBindingManager.PushBindings>
+                    <pb:PushBinding TargetProperty="ActualWidth" Path="GraphWidth" />
+                    <pb:PushBinding TargetProperty="ActualHeight" Path="GraphHeight" />
+                </pb:PushBindingManager.PushBindings>
                 <Path Stroke="#AAFFFFFF" StrokeDashArray="2,2" StrokeThickness="1">
                     <Path.Data>
                         <PathGeometry>
