@@ -111,7 +111,7 @@ namespace TemperatureMonitor.Utilities
         {
             if (propertyNames == null)
             {
-                throw new ArgumentNullException("propertyNames");
+                throw new ArgumentNullException(nameof(propertyNames));
             }
 
             foreach (var propertyName in propertyNames)
@@ -137,7 +137,7 @@ namespace TemperatureMonitor.Utilities
         {
             if (propertyNames == null)
             {
-                throw new ArgumentNullException("propertyNames");
+                throw new ArgumentNullException(nameof(propertyNames));
             }
 
             foreach (var propertyName in propertyNames)
