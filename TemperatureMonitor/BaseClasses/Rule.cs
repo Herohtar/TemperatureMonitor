@@ -8,22 +8,16 @@ namespace TemperatureMonitor.Utilities
     /// <typeparam name="T">The type of the object the rule applies to.</typeparam>
     public abstract class Rule<T>
     {
-        #region Constructors
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="Rule<T>"/> class.
+        /// Initializes a new instance of the <see cref="Rule&lt;T&gt;"/> class.
         /// </summary>
         /// <param name="propertyName">The name of the property this instance applies to.</param>
         /// <param name="error">The error message if the rules fails.</param>
         protected Rule(string propertyName, object error)
         {
-            PropertyName = propertyName ?? throw new ArgumentNullException("propertyName");
-            Error = error ?? throw new ArgumentNullException("error");
+            PropertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
+            Error = error ?? throw new ArgumentNullException(nameof(error));
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Gets the name of the property this instance applies to.
@@ -37,10 +31,6 @@ namespace TemperatureMonitor.Utilities
         /// <value>The error message if the rules fails.</value>
         public object Error { get; }
 
-        #endregion
-
-        #region Apply
-
         /// <summary>
         /// Applies the rule to the specified object.
         /// </summary>
@@ -49,7 +39,5 @@ namespace TemperatureMonitor.Utilities
         /// <c>true</c> if the object satisfies the rule, otherwise <c>false</c>.
         /// </returns>
         public abstract bool Apply(T obj);
-
-        #endregion
     }
 }
