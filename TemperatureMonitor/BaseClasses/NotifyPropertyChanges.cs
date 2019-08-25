@@ -12,10 +12,8 @@ namespace TemperatureMonitor.Utilities
     /// </summary>
     public abstract class NotifyPropertyChanges : Disposable, INotifyPropertyChanged, INotifyPropertyChanging
     {
-        #region Public Events
-
         /// <summary>
-        /// Occurs when a property value changes.
+        /// Occurs after a property value changes.
         /// </summary>
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
@@ -24,7 +22,7 @@ namespace TemperatureMonitor.Utilities
         }
 
         /// <summary>
-        /// Occurs when a property value is changing.
+        /// Occurs before a property value is changed.
         /// </summary>
         event PropertyChangingEventHandler INotifyPropertyChanging.PropertyChanging
         {
@@ -32,23 +30,10 @@ namespace TemperatureMonitor.Utilities
             remove { propertyChanging -= value; }
         }
 
-        #endregion
-
-        #region Private Events
-
-        /// <summary>
-        /// Occurs when a property value changes.
-        /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         private event PropertyChangedEventHandler propertyChanged;
-
-        /// <summary>
-        /// Occurs when a property value is changing.
-        /// </summary>
         private event PropertyChangingEventHandler propertyChanging;
-
-        #endregion
-
-        #region Public Properties
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// Gets the when property changed observable event. Occurs when a property value changes.
@@ -89,10 +74,6 @@ namespace TemperatureMonitor.Utilities
                     .Select(x => x.EventArgs.PropertyName);
             }
         }
-
-        #endregion
-
-        #region Protected Methods
 
         /// <summary>
         /// Raises the PropertyChanged event.
@@ -251,7 +232,5 @@ namespace TemperatureMonitor.Utilities
 
             return true;
         }
-
-        #endregion
     }
 }
