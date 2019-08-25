@@ -10,18 +10,14 @@ namespace TemperatureMonitor.Utilities
     /// <typeparam name="T">The type of the object the rules can be applied to.</typeparam>
     public sealed class RuleCollection<T> : Collection<Rule<T>>
     {
-        #region Public Methods
-
         /// <summary>
         /// Adds a new <see cref="Rule{T}"/> to this instance.
         /// </summary>
         /// <param name="propertyName">The name of the property the rules applies to.</param>
         /// <param name="error">The error if the object does not satisfy the rule.</param>
         /// <param name="rule">The rule to execute.</param>
-        public void Add(string propertyName, object error, Func<T, bool> rule)
-        {
+        public void Add(string propertyName, object error, Func<T, bool> rule) =>
             Add(new DelegateRule<T>(propertyName, error, rule));
-        }
 
         /// <summary>
         /// Applies the <see cref="Rule{T}"/>'s contained in this instance to <paramref name="obj"/>.
@@ -34,7 +30,7 @@ namespace TemperatureMonitor.Utilities
         {
             var errors = new List<object>();
 
-            foreach (Rule<T> rule in this)
+            foreach (var rule in this)
             {
                 if (string.IsNullOrEmpty(propertyName) || rule.PropertyName.Equals(propertyName))
                 {
@@ -47,7 +43,5 @@ namespace TemperatureMonitor.Utilities
 
             return errors;
         }
-
-        #endregion
     }
 }
