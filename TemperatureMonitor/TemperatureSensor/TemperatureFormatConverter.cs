@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using TemperatureMonitor.Utilities;
 
@@ -17,7 +13,7 @@ namespace TemperatureMonitor
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double temperature = (double)value;
+            var temperature = (double)value;
             if (double.IsNaN(temperature))
             {
                 return "---";

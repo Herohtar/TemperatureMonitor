@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TemperatureMonitor.Utilities
 {
@@ -26,12 +22,7 @@ namespace TemperatureMonitor.Utilities
         public DelegateRule(string propertyName, object error, Func<T, bool> rule)
             : base(propertyName, error)
         {
-            if (rule == null)
-            {
-                throw new ArgumentNullException("rule");
-            }
-
-            this.rule = rule;
+            this.rule = rule ?? throw new ArgumentNullException("rule");
         }
 
         #endregion
@@ -47,7 +38,7 @@ namespace TemperatureMonitor.Utilities
         /// </returns>
         public override bool Apply(T obj)
         {
-            return this.rule(obj);
+            return rule(obj);
         }
 
         #endregion

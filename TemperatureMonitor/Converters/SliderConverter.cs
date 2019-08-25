@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using TemperatureMonitor.Utilities;
 
@@ -19,8 +15,8 @@ namespace TemperatureMonitor
         {
             if (value.Length >= 2)
             {
-                double sliderValue = System.Convert.ToDouble(value[0]);
-                double difference = (GraphSettings.End - GraphSettings.Start).TotalSeconds;
+                var sliderValue = System.Convert.ToDouble(value[0]);
+                var difference = (GraphSettings.End - GraphSettings.Start).TotalSeconds;
 
                 return GraphSettings.Start.AddSeconds(difference * sliderValue).ToString();
             }

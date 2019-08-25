@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -20,20 +17,20 @@ namespace TemperatureMonitor
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            List<TemperatureReading> readings = (List<TemperatureReading>)value;
+            var readings = (List<TemperatureReading>)value;
             PathFigureCollection figures = null;
 
-            IEnumerable<TemperatureReading> cleanHistory = readings.Where(r => !double.IsNegativeInfinity(r.Temperature));
+            var cleanHistory = readings.Where(r => !double.IsNegativeInfinity(r.Temperature));
             if (cleanHistory.Count() > 0)
             {
-                DateTime startTime = cleanHistory.First().Time;
-                DateTime endTime = cleanHistory.Last().Time;
-                int dataHeight = GraphSettings.Max - GraphSettings.Min;
-                int dataWidth = (int)(endTime - startTime).TotalSeconds;
-                PointCollection points = new PointCollection(cleanHistory.Select(r => new Point(((r.Time - startTime).TotalSeconds / dataWidth) * GraphSettings.Width, (1 - ((r.Temperature - GraphSettings.Min) / dataHeight)) * GraphSettings.Height)));
+                var startTime = cleanHistory.First().Time;
+                var endTime = cleanHistory.Last().Time;
+                var dataHeight = GraphSettings.Max - GraphSettings.Min;
+                var dataWidth = (int)(endTime - startTime).TotalSeconds;
+                var points = new PointCollection(cleanHistory.Select(r => new Point(((r.Time - startTime).TotalSeconds / dataWidth) * GraphSettings.Width, (1 - ((r.Temperature - GraphSettings.Min) / dataHeight)) * GraphSettings.Height)));
 
                 figures = new PathFigureCollection();
-                PathFigure figure = new PathFigure()
+                var figure = new PathFigure()
                 {
                     StartPoint = points.First()
                 };

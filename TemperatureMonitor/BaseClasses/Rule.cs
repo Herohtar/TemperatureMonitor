@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TemperatureMonitor.Utilities
 {
@@ -12,9 +8,6 @@ namespace TemperatureMonitor.Utilities
     /// <typeparam name="T">The type of the object the rule applies to.</typeparam>
     public abstract class Rule<T>
     {
-        private string propertyName;
-        private object error;
-
         #region Constructors
 
         /// <summary>
@@ -24,18 +17,8 @@ namespace TemperatureMonitor.Utilities
         /// <param name="error">The error message if the rules fails.</param>
         protected Rule(string propertyName, object error)
         {
-            if (propertyName == null)
-            {
-                throw new ArgumentNullException("propertyName");
-            }
-
-            if (error == null)
-            {
-                throw new ArgumentNullException("error");
-            }
-
-            this.propertyName = propertyName;
-            this.error = error;
+            PropertyName = propertyName ?? throw new ArgumentNullException("propertyName");
+            Error = error ?? throw new ArgumentNullException("error");
         }
 
         #endregion
@@ -46,19 +29,13 @@ namespace TemperatureMonitor.Utilities
         /// Gets the name of the property this instance applies to.
         /// </summary>
         /// <value>The name of the property this instance applies to.</value>
-        public string PropertyName
-        {
-            get { return this.propertyName; }
-        }
+        public string PropertyName { get; }
 
         /// <summary>
         /// Gets the error message if the rules fails.
         /// </summary>
         /// <value>The error message if the rules fails.</value>
-        public object Error
-        {
-            get { return this.error; }
-        }
+        public object Error { get; }
 
         #endregion
 

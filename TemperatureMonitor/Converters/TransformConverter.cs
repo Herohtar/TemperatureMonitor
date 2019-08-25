@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using TemperatureMonitor.Utilities;
 
@@ -19,10 +15,10 @@ namespace TemperatureMonitor
         {
             if (value.Length >= 2)
             {
-                double lowerValue = System.Convert.ToDouble(value[0]);
-                double upperValue = System.Convert.ToDouble(value[1]);
+                var lowerValue = System.Convert.ToDouble(value[0]);
+                var upperValue = System.Convert.ToDouble(value[1]);
 
-                double result = 1 / (upperValue - lowerValue);
+                var result = 1 / (upperValue - lowerValue);
 
                 if (System.Convert.ToString(parameter).Equals("translate"))
                 {

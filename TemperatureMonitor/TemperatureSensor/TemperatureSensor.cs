@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
 using TemperatureMonitor.Utilities;
 
 namespace TemperatureMonitor
@@ -31,24 +24,15 @@ namespace TemperatureMonitor
 
         public string Name
         {
-            get { return name; }
-            set { SetProperty(ref name, value); }
+            get => name;
+            set => SetProperty(ref name, value);
         }
 
-        public IObservable<TemperatureReading> WhenTemperatureRecorded
-        {
-            get { return temperatureRecorded; }
-        }
+        public IObservable<TemperatureReading> WhenTemperatureRecorded => temperatureRecorded;
 
-        public void RecordTemperature(double temperature)
-        {
-            RecordTemperature(new TemperatureReading(DateTime.Now, temperature));
-        }
+        public void RecordTemperature(double temperature) => RecordTemperature(new TemperatureReading(DateTime.Now, temperature));
 
-        public void RecordTemperature(double temperature, DateTime time)
-        {
-            RecordTemperature(new TemperatureReading(time, temperature));
-        }
+        public void RecordTemperature(double temperature, DateTime time) => RecordTemperature(new TemperatureReading(time, temperature));
 
         public void RecordTemperature(TemperatureReading reading)
         {
@@ -67,9 +51,6 @@ namespace TemperatureMonitor
 
         public List<TemperatureReading> TemperatureReadings { get; }
 
-        public double CurrentTemperature
-        {
-            get { return TemperatureReadings.DefaultIfEmpty(new TemperatureReading(DateTime.Now, double.NaN)).Last().Temperature; }
-        }
+        public double CurrentTemperature => TemperatureReadings.DefaultIfEmpty(new TemperatureReading(DateTime.Now, double.NaN)).Last().Temperature;
     }
 }

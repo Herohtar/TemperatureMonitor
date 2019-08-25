@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TemperatureMonitor.Utilities
 {
@@ -16,7 +12,6 @@ namespace TemperatureMonitor.Utilities
     {
         #region Fields
 
-        private bool isDisposed;
         private Subject<Unit> whenDisposedSubject;
 
         #endregion
@@ -31,7 +26,7 @@ namespace TemperatureMonitor.Utilities
         /// </summary>
         ~Disposable()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         #endregion
@@ -48,18 +43,18 @@ namespace TemperatureMonitor.Utilities
         {
             get
             {
-                if (this.IsDisposed)
+                if (IsDisposed)
                 {
                     return Observable.Return(Unit.Default);
                 }
                 else
                 {
-                    if (this.whenDisposedSubject == null)
+                    if (whenDisposedSubject == null)
                     {
-                        this.whenDisposedSubject = new Subject<Unit>();
+                        whenDisposedSubject = new Subject<Unit>();
                     }
 
-                    return this.whenDisposedSubject.AsObservable();
+                    return whenDisposedSubject.AsObservable();
                 }
             }
         }
@@ -68,10 +63,7 @@ namespace TemperatureMonitor.Utilities
         /// Gets a value indicating whether this <see cref="Disposable"/> is disposed.
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
-        public bool IsDisposed
-        {
-            get { return this.isDisposed; }
-        }
+        public bool IsDisposed { get; private set; }
 
         #endregion
 
@@ -83,7 +75,7 @@ namespace TemperatureMonitor.Utilities
         public void Dispose()
         {
             // Dispose all managed and unmanaged resources.
-            this.Dispose(true);
+            Dispose(true);
 
             // Take this object off the finalization queue and prevent finalization code for this
             // object from executing a second time.
@@ -113,9 +105,9 @@ namespace TemperatureMonitor.Utilities
         /// </summary>
         protected void ThrowIfDisposed()
         {
-            if (this.isDisposed)
+            if (IsDisposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
         }
 
@@ -131,24 +123,24 @@ namespace TemperatureMonitor.Utilities
         private void Dispose(bool disposing)
         {
             // Check to see if Dispose has already been called.
-            if (!this.isDisposed)
+            if (!IsDisposed)
             {
                 // If disposing managed and unmanaged resources.
                 if (disposing)
                 {
-                    this.DisposeManaged();
+                    DisposeManaged();
                 }
 
-                this.DisposeUnmanaged();
+                DisposeUnmanaged();
 
-                this.isDisposed = true;
+                IsDisposed = true;
 
-                if (this.whenDisposedSubject != null)
+                if (whenDisposedSubject != null)
                 {
                     // Raise the WhenDisposed event.
-                    this.whenDisposedSubject.OnNext(Unit.Default);
-                    this.whenDisposedSubject.OnCompleted();
-                    this.whenDisposedSubject.Dispose();
+                    whenDisposedSubject.OnNext(Unit.Default);
+                    whenDisposedSubject.OnCompleted();
+                    whenDisposedSubject.Dispose();
                 }
             }
         }

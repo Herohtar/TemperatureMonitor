@@ -2,13 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 
 namespace TemperatureMonitor.Utilities
 {
@@ -22,9 +18,6 @@ namespace TemperatureMonitor.Utilities
         #region Fields
 
         private const string HasErrorsPropertyName = "HasErrors";
-
-        private static RuleCollection<T> rules = new RuleCollection<T>();
-
         private Dictionary<string, List<object>> errors;
 
         #endregion
@@ -36,8 +29,8 @@ namespace TemperatureMonitor.Utilities
         /// </summary>
         event EventHandler<DataErrorsChangedEventArgs> INotifyDataErrorInfo.ErrorsChanged
         {
-            add { this.errorsChanged += value; }
-            remove { this.errorsChanged -= value; }
+            add { errorsChanged += value; }
+            remove { errorsChanged -= value; }
         }
 
         #endregion
@@ -59,17 +52,11 @@ namespace TemperatureMonitor.Utilities
         /// <value>
         /// The when errors changed observable event.
         /// </value>
-        public IObservable<string> WhenErrorsChanged
-        {
-            get
-            {
-                return Observable
+        public IObservable<string> WhenErrorsChanged => Observable
                     .FromEventPattern<DataErrorsChangedEventArgs>(
-                        h => this.errorsChanged += h,
-                        h => this.errorsChanged -= h)
+                        h => errorsChanged += h,
+                        h => errorsChanged -= h)
                     .Select(x => x.EventArgs.PropertyName);
-            }
-        }
 
         /// <summary>
         /// Gets a value indicating whether the object has validation errors. 
@@ -79,8 +66,8 @@ namespace TemperatureMonitor.Utilities
         {
             get
             {
-                this.InitializeErrors();
-                return this.errors.Count > 0;
+                InitializeErrors();
+                return errors.Count > 0;
             }
         }
 
@@ -92,10 +79,7 @@ namespace TemperatureMonitor.Utilities
         /// Gets the rules which provide the errors.
         /// </summary>
         /// <value>The rules this instance must satisfy.</value>
-        protected static RuleCollection<T> Rules
-        {
-            get { return rules; }
-        }
+        protected static RuleCollection<T> Rules { get; } = new RuleCollection<T>();
 
         /// <summary>
         /// Gets the validation errors for the entire object.
@@ -103,7 +87,7 @@ namespace TemperatureMonitor.Utilities
         /// <returns>A collection of errors.</returns>
         public IEnumerable GetErrors()
         {
-            return this.GetErrors(null);
+            return GetErrors(null);
         }
 
         /// <summary>
@@ -114,19 +98,14 @@ namespace TemperatureMonitor.Utilities
         /// <returns>A collection of errors.</returns>
         public IEnumerable GetErrors(string propertyName)
         {
-            Debug.Assert(
-                string.IsNullOrEmpty(propertyName) ||
-                (this.GetType().GetRuntimeProperty(propertyName) != null),
-                "Check that the property name exists for this instance.");
-
-            this.InitializeErrors();
+            InitializeErrors();
 
             IEnumerable result;
             if (string.IsNullOrEmpty(propertyName))
             {
-                List<object> allErrors = new List<object>();
+                var allErrors = new List<object>();
 
-                foreach (KeyValuePair<string, List<object>> keyValuePair in this.errors)
+                foreach (var keyValuePair in errors)
                 {
                     allErrors.AddRange(keyValuePair.Value);
                 }
@@ -135,9 +114,9 @@ namespace TemperatureMonitor.Utilities
             }
             else
             {
-                if (this.errors.ContainsKey(propertyName))
+                if (errors.ContainsKey(propertyName))
                 {
-                    result = this.errors[propertyName];
+                    result = errors[propertyName];
                 }
                 else
                 {
@@ -162,11 +141,11 @@ namespace TemperatureMonitor.Utilities
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                this.ApplyRules();
+                ApplyRules();
             }
             else
             {
-                this.ApplyRules(propertyName);
+                ApplyRules(propertyName);
             }
 
             base.OnPropertyChanged(HasErrorsPropertyName);
@@ -178,17 +157,7 @@ namespace TemperatureMonitor.Utilities
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnErrorsChanged([CallerMemberName] string propertyName = null)
         {
-            Debug.Assert(
-                string.IsNullOrEmpty(propertyName) ||
-                (this.GetType().GetRuntimeProperty(propertyName) != null),
-                "Check that the property name exists for this instance.");
-
-            EventHandler<DataErrorsChangedEventArgs> eventHandler = this.errorsChanged;
-
-            if (eventHandler != null)
-            {
-                eventHandler(this, new DataErrorsChangedEventArgs(propertyName));
-            }
+            errorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
         #endregion
@@ -200,11 +169,11 @@ namespace TemperatureMonitor.Utilities
         /// </summary>
         private void ApplyRules()
         {
-            this.InitializeErrors();
+            InitializeErrors();
 
-            foreach (string propertyName in rules.Select(x => x.PropertyName))
+            foreach (var propertyName in Rules.Select(x => x.PropertyName))
             {
-                this.ApplyRules(propertyName);
+                ApplyRules(propertyName);
             }
         }
 
@@ -214,28 +183,28 @@ namespace TemperatureMonitor.Utilities
         /// <param name="propertyName">Name of the property.</param>
         private void ApplyRules(string propertyName)
         {
-            this.InitializeErrors();
+            InitializeErrors();
 
-            List<object> propertyErrors = rules.Apply((T)this, propertyName).ToList();
+            var propertyErrors = Rules.Apply((T)this, propertyName).ToList();
 
             if (propertyErrors.Count > 0)
             {
-                if (this.errors.ContainsKey(propertyName))
+                if (errors.ContainsKey(propertyName))
                 {
-                    this.errors[propertyName].Clear();
+                    errors[propertyName].Clear();
                 }
                 else
                 {
-                    this.errors[propertyName] = new List<object>();
+                    errors[propertyName] = new List<object>();
                 }
 
-                this.errors[propertyName].AddRange(propertyErrors);
-                this.OnErrorsChanged(propertyName);
+                errors[propertyName].AddRange(propertyErrors);
+                OnErrorsChanged(propertyName);
             }
-            else if (this.errors.ContainsKey(propertyName))
+            else if (errors.ContainsKey(propertyName))
             {
-                this.errors.Remove(propertyName);
-                this.OnErrorsChanged(propertyName);
+                errors.Remove(propertyName);
+                OnErrorsChanged(propertyName);
             }
         }
 
@@ -244,11 +213,11 @@ namespace TemperatureMonitor.Utilities
         /// </summary>
         private void InitializeErrors()
         {
-            if (this.errors == null)
+            if (errors == null)
             {
-                this.errors = new Dictionary<string, List<object>>();
+                errors = new Dictionary<string, List<object>>();
 
-                this.ApplyRules();
+                ApplyRules();
             }
         }
 

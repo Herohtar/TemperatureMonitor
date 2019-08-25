@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TemperatureMonitor.Utilities
 {
@@ -23,7 +20,7 @@ namespace TemperatureMonitor.Utilities
         /// <param name="rule">The rule to execute.</param>
         public void Add(string propertyName, object error, Func<T, bool> rule)
         {
-            this.Add(new DelegateRule<T>(propertyName, error, rule));
+            Add(new DelegateRule<T>(propertyName, error, rule));
         }
 
         /// <summary>
@@ -35,7 +32,7 @@ namespace TemperatureMonitor.Utilities
         /// <returns>A collection of errors.</returns>
         public IEnumerable<object> Apply(T obj, string propertyName)
         {
-            List<object> errors = new List<object>();
+            var errors = new List<object>();
 
             foreach (Rule<T> rule in this)
             {

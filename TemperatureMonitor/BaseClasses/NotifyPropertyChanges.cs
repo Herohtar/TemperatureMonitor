@@ -1,17 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
-using System.Reflection;
 
 namespace TemperatureMonitor.Utilities
 {
     /// <summary>
     /// Notifies subscribers that a property in this instance is changing or has changed.
     /// </summary>
-    public abstract class NotifyPropertyChanges : Disposable, INotifyPropertyChanged //, INotifyPropertyChanging
+    public abstract class NotifyPropertyChanges : Disposable, INotifyPropertyChanged, INotifyPropertyChanging
     {
         #region Public Events
 
@@ -27,11 +26,11 @@ namespace TemperatureMonitor.Utilities
         /// <summary>
         /// Occurs when a property value is changing.
         /// </summary>
-        // event PropertyChangingEventHandler INotifyPropertyChanging.PropertyChanging
-        // {
-        //     add { this.PropertyChanging += value; }
-        //     remove { this.PropertyChanging -= value; }
-        // }
+        event PropertyChangingEventHandler INotifyPropertyChanging.PropertyChanging
+        {
+            add { PropertyChanging += value; }
+            remove { PropertyChanging -= value; }
+        }
 
         #endregion
 
@@ -45,7 +44,7 @@ namespace TemperatureMonitor.Utilities
         /// <summary>
         /// Occurs when a property value is changing.
         /// </summary>
-        // private event PropertyChangingEventHandler PropertyChanging;
+        private event PropertyChangingEventHandler PropertyChanging;
 
         #endregion
 
@@ -77,17 +76,11 @@ namespace TemperatureMonitor.Utilities
         /// <value>
         /// The when property changing observable event.
         /// </value>
-        // public IObservable<EventPattern<PropertyChangingEventArgs>> WhenPropertyChanging
-        // {
-        //     get
-        //     {
-        //         return Observable
-        //             .FromEventPattern<PropertyChangingEventHandler, PropertyChangingEventArgs>(
-        //                 h => this.PropertyChanging += h,
-        //                 h => this.PropertyChanging -= h)
-        //             .AsObservable();
-        //     }
-        // }
+        public IObservable<EventPattern<PropertyChangingEventArgs>> WhenPropertyChanging => Observable
+                    .FromEventPattern<PropertyChangingEventHandler, PropertyChangingEventArgs>(
+                        h => PropertyChanging += h,
+                        h => PropertyChanging -= h)
+                    .AsObservable();
 
         #endregion
 
@@ -99,11 +92,6 @@ namespace TemperatureMonitor.Utilities
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            Debug.Assert(
-                string.IsNullOrEmpty(propertyName) ||
-                (GetType().GetRuntimeProperty(propertyName) != null),
-                "Check that the property name exists for this instance.");
-
             propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -118,7 +106,7 @@ namespace TemperatureMonitor.Utilities
                 throw new ArgumentNullException("propertyNames");
             }
 
-            foreach (string propertyName in propertyNames)
+            foreach (var propertyName in propertyNames)
             {
                 OnPropertyChanged(propertyName);
             }
@@ -130,17 +118,7 @@ namespace TemperatureMonitor.Utilities
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnPropertyChanging([CallerMemberName] string propertyName = null)
         {
-            Debug.Assert(
-                string.IsNullOrEmpty(propertyName) ||
-                (GetType().GetRuntimeProperty(propertyName) != null),
-                "Check that the property name exists for this instance.");
-
-            // PropertyChangingEventHandler eventHandler = this.PropertyChanging;
-
-            // if (eventHandler != null)
-            // {
-            //     eventHandler(this, new PropertyChangingEventArgs(propertyName));
-            // }
+            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
         }
 
         /// <summary>
@@ -154,7 +132,7 @@ namespace TemperatureMonitor.Utilities
                 throw new ArgumentNullException("propertyNames");
             }
 
-            foreach (string propertyName in propertyNames)
+            foreach (var propertyName in propertyNames)
             {
                 OnPropertyChanging(propertyName);
             }

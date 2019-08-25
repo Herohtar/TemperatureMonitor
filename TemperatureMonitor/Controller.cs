@@ -1,18 +1,16 @@
-﻿using System;
+﻿using AlarmDotCom;
+using AlarmDotCom.JsonObjects.ResponseData;
+using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using TemperatureMonitor.Utilities;
-using System.Reactive.Concurrency;
-using System.Collections.ObjectModel;
-using MahApps.Metro.Controls.Dialogs;
-using AlarmDotCom;
-using AlarmDotCom.JsonObjects.ResponseData;
 
 namespace TemperatureMonitor
 {
@@ -106,63 +104,51 @@ namespace TemperatureMonitor
 
         public bool IsStarted
         {
-            get { return isStarted; }
-            set { SetProperty(ref isStarted, value); }
+            get => isStarted;
+            set => SetProperty(ref isStarted, value);
         }
 
         public DateTime StartTime
         {
-            get { return GraphSettings.Start; }
-            set { SetProperty(() => GraphSettings.Start == value, () => GraphSettings.Start = value); }
+            get => GraphSettings.Start;
+            set => SetProperty(() => GraphSettings.Start == value, () => GraphSettings.Start = value);
         }
 
         public DateTime EndTime
         {
-            get { return GraphSettings.End; }
-            set { SetProperty(() => GraphSettings.End == value, () => GraphSettings.End = value); }
+            get => GraphSettings.End;
+            set => SetProperty(() => GraphSettings.End == value, () => GraphSettings.End = value);
         }
 
         public double GraphHeight
         {
-            get { return GraphSettings.Height; }
-            set { SetProperty(() => GraphSettings.Height == value, () => GraphSettings.Height = value); }
+            get => GraphSettings.Height;
+            set => SetProperty(() => GraphSettings.Height == value, () => GraphSettings.Height = value);
         }
 
         public double GraphWidth
         {
-            get { return GraphSettings.Width; }
-            set { SetProperty(() => GraphSettings.Width == value, () => GraphSettings.Width = value); }
+            get => GraphSettings.Width;
+            set => SetProperty(() => GraphSettings.Width == value, () => GraphSettings.Width = value);
         }
 
         public int Max
         {
-            get { return GraphSettings.Max; }
-            set { SetProperty(() => GraphSettings.Max == value, () => GraphSettings.Max = value); }
+            get => GraphSettings.Max;
+            set => SetProperty(() => GraphSettings.Max == value, () => GraphSettings.Max = value);
         }
 
         public int Min
         {
-            get { return GraphSettings.Min; }
-            set { SetProperty(() => GraphSettings.Min == value, () => GraphSettings.Min = value); }
+            get => GraphSettings.Min;
+            set => SetProperty(() => GraphSettings.Min == value, () => GraphSettings.Min = value);
         }
 
         public event EventHandler TrayClick;
-        public ICommand TrayClickCommand
+        public ICommand TrayClickCommand => new Command
         {
-            get
-            {
-                return new Command
-                {
-                    ExecuteDelegate = p =>
-                    {
-                        TrayClick?.Invoke(this, new EventArgs());
-                    },
-                    CanExecuteDelegate = p =>
-                    {
-                        return true;
-                    }
-                };
-            }
-        }
+            ExecuteDelegate = p => TrayClick?.Invoke(this, new EventArgs()),
+            CanExecuteDelegate = p => true
+        };
     }
 }

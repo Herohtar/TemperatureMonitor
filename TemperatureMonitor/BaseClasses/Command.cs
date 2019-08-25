@@ -10,10 +10,7 @@ namespace TemperatureMonitor.Utilities
 
         public void Execute(object parameter)
         {
-            if (ExecuteDelegate != null)
-            {
-                ExecuteDelegate(parameter);
-            }
+            ExecuteDelegate?.Invoke(parameter);
         }
 
         public bool CanExecute(object parameter)
