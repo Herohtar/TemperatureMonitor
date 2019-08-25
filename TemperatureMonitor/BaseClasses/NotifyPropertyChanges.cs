@@ -28,8 +28,8 @@ namespace TemperatureMonitor.Utilities
         /// </summary>
         event PropertyChangingEventHandler INotifyPropertyChanging.PropertyChanging
         {
-            add { PropertyChanging += value; }
-            remove { PropertyChanging -= value; }
+            add { propertyChanging += value; }
+            remove { propertyChanging -= value; }
         }
 
         #endregion
@@ -44,7 +44,7 @@ namespace TemperatureMonitor.Utilities
         /// <summary>
         /// Occurs when a property value is changing.
         /// </summary>
-        private event PropertyChangingEventHandler PropertyChanging;
+        private event PropertyChangingEventHandler propertyChanging;
 
         #endregion
 
@@ -76,11 +76,19 @@ namespace TemperatureMonitor.Utilities
         /// <value>
         /// The when property changing observable event.
         /// </value>
-        public IObservable<EventPattern<PropertyChangingEventArgs>> WhenPropertyChanging => Observable
+        public IObservable<string> WhenPropertyChanging
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return Observable
                     .FromEventPattern<PropertyChangingEventHandler, PropertyChangingEventArgs>(
-                        h => PropertyChanging += h,
-                        h => PropertyChanging -= h)
-                    .AsObservable();
+                        h => propertyChanging += h,
+                        h => propertyChanging -= h)
+                    .Select(x => x.EventArgs.PropertyName);
+            }
+        }
 
         #endregion
 
@@ -118,7 +126,7 @@ namespace TemperatureMonitor.Utilities
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void OnPropertyChanging([CallerMemberName] string propertyName = null)
         {
-            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
+            propertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
         }
 
         /// <summary>
