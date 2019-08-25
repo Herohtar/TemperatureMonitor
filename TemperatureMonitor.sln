@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlarmDotCom", "AlarmDotCom\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TemperatureMonitor", "TemperatureMonitor\TemperatureMonitor.csproj", "{DB270560-2950-4CA7-A1B5-54A7E6BD5E8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveComponentModel", "ReactiveComponentModel\ReactiveComponentModel.csproj", "{1E97C5CD-3954-4F89-A41C-56031CB1C96F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DB270560-2950-4CA7-A1B5-54A7E6BD5E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB270560-2950-4CA7-A1B5-54A7E6BD5E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB270560-2950-4CA7-A1B5-54A7E6BD5E8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E97C5CD-3954-4F89-A41C-56031CB1C96F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E97C5CD-3954-4F89-A41C-56031CB1C96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E97C5CD-3954-4F89-A41C-56031CB1C96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E97C5CD-3954-4F89-A41C-56031CB1C96F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

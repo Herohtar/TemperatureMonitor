@@ -1,6 +1,7 @@
 ﻿using AlarmDotCom;
 using AlarmDotCom.JsonObjects.ResponseData;
 using MahApps.Metro.Controls.Dialogs;
+using ReactiveComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

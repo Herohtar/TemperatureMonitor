@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AlarmDotCom\AlarmDotCom.csproj" />
+    <ProjectReference Include="..\ReactiveComponentModel\ReactiveComponentModel.csproj" />
   </ItemGroup>
 
 </Project>

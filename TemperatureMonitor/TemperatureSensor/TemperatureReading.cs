@@ -1,5 +1,5 @@
-﻿using System;
-using TemperatureMonitor.Utilities;
+﻿using ReactiveComponentModel;
+using System;
 
 namespace TemperatureMonitor
 {

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using ReactiveComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using TemperatureMonitor.Utilities;
 
 namespace TemperatureMonitor
 {
