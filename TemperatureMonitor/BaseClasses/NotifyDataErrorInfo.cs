@@ -12,20 +12,14 @@ namespace TemperatureMonitor.Utilities
     /// Provides functionality to provide errors for the object if it is in an invalid state.
     /// </summary>
     /// <typeparam name="T">The type of this instance.</typeparam>
-    public abstract class NotifyDataErrorInfo<T> : NotifyPropertyChanges, INotifyDataErrorInfo
+    public abstract class NotifyDataErrorInfo<T> : NotifyPropertyChanges, INotifyDataErrorInfo, IDataErrorInfo
         where T : NotifyDataErrorInfo<T>
     {
-        #region Fields
-
         private const string HasErrorsPropertyName = "HasErrors";
         private Dictionary<string, List<object>> errors;
 
-        #endregion
-
-        #region Public Events
-
         /// <summary>
-        /// Occurs when the validation errors have changed for a property or for the entire object. 
+        /// Occurs when the validation errors have changed for a property or for the entire object.
         /// </summary>
         event EventHandler<DataErrorsChangedEventArgs> INotifyDataErrorInfo.ErrorsChanged
         {
@@ -33,33 +27,40 @@ namespace TemperatureMonitor.Utilities
             remove { errorsChanged -= value; }
         }
 
-        #endregion
-
-        #region Private Events
-
-        /// <summary>
-        /// Occurs when the validation errors have changed for a property or for the entire object. 
-        /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         private event EventHandler<DataErrorsChangedEventArgs> errorsChanged;
-
-        #endregion
-
-        #region Public Properties
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
-        /// Gets the when errors changed observable event. Occurs when the validation errors have changed for a property or for the entire object. 
+        /// Gets the when errors changed observable event. Occurs when the validation errors have changed for a property or for the entire object.
         /// </summary>
         /// <value>
         /// The when errors changed observable event.
         /// </value>
-        public IObservable<string> WhenErrorsChanged => Observable
+        public IObservable<string> WhenErrorsChanged
+        {
+            get
+            {
+                ThrowIfDisposed();
+
+                return Observable
                     .FromEventPattern<DataErrorsChangedEventArgs>(
                         h => errorsChanged += h,
                         h => errorsChanged -= h)
                     .Select(x => x.EventArgs.PropertyName);
+            }
+        }
 
         /// <summary>
-        /// Gets a value indicating whether the object has validation errors. 
+        /// Gets the errors for the property with the specified name.
+        /// </summary>
+        /// <param name="columnName">The name of the property to get errors for.</param>
+        /// <value>A collection of all errors from the <see cref="IDataErrorInfo"/>. <c>null</c>
+        /// if there are no errors.</value>
+        string IDataErrorInfo.this[string columnName] => string.Join(". ", GetErrors(columnName));
+
+        /// <summary>
+        /// Gets a value indicating whether the object has validation errors.
         /// </summary>
         /// <value><c>true</c> if this instance has errors, otherwise <c>false</c>.</value>
         public virtual bool HasErrors
@@ -71,9 +72,14 @@ namespace TemperatureMonitor.Utilities
             }
         }
 
-        #endregion
-
-        #region Protected Properties
+        /// <summary>
+        /// Gets an error message indicating what is wrong with this object.
+        /// </summary>
+        /// <value></value>
+        /// <returns>
+        /// An error message indicating what is wrong with this object. The default is an empty string ("").
+        /// </returns>
+        string IDataErrorInfo.Error => ((IDataErrorInfo)this)[null];
 
         /// <summary>
         /// Gets the rules which provide the errors.
@@ -85,15 +91,12 @@ namespace TemperatureMonitor.Utilities
         /// Gets the validation errors for the entire object.
         /// </summary>
         /// <returns>A collection of errors.</returns>
-        public IEnumerable GetErrors()
-        {
-            return GetErrors(null);
-        }
+        public IEnumerable GetErrors() => GetErrors(null);
 
         /// <summary>
         /// Gets the validation errors for a specified property or for the entire object.
         /// </summary>
-        /// <param name="propertyName">Name of the property to retrieve errors for. <c>null</c> to 
+        /// <param name="propertyName">Name of the property to retrieve errors for. <c>null</c> to
         /// retrieve all errors for this instance.</param>
         /// <returns>A collection of errors.</returns>
         public IEnumerable GetErrors(string propertyName)
@@ -104,7 +107,6 @@ namespace TemperatureMonitor.Utilities
             if (string.IsNullOrEmpty(propertyName))
             {
                 var allErrors = new List<object>();
-
                 foreach (var keyValuePair in errors)
                 {
                     allErrors.AddRange(keyValuePair.Value);
@@ -120,16 +122,12 @@ namespace TemperatureMonitor.Utilities
                 }
                 else
                 {
-                    result = new List<object>();
+                    result = Enumerable.Empty<object>();
                 }
             }
 
             return result;
         }
-
-        #endregion
-
-        #region Protected Methods
 
         /// <summary>
         /// Raises the PropertyChanged event.
@@ -160,10 +158,6 @@ namespace TemperatureMonitor.Utilities
             errorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
-        #endregion
-
-        #region Private Methods
-
         /// <summary>
         /// Applies all rules to this instance.
         /// </summary>
@@ -186,7 +180,6 @@ namespace TemperatureMonitor.Utilities
             InitializeErrors();
 
             var propertyErrors = Rules.Apply((T)this, propertyName).ToList();
-
             if (propertyErrors.Count > 0)
             {
                 if (errors.ContainsKey(propertyName))
@@ -220,7 +213,5 @@ namespace TemperatureMonitor.Utilities
                 ApplyRules();
             }
         }
-
-        #endregion
     }
 }
