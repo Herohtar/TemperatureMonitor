@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0455" />
     <PackageReference Include="PushBinding" Version="1.2.0" />
+    <PackageReference Include="ReactiveComponentModel" Version="1.0.0" />
     <PackageReference Include="System.Reactive" Version="4.2.0-preview.625" />
   </ItemGroup>
 
@@ -21,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AlarmDotCom\AlarmDotCom.csproj" />
-    <ProjectReference Include="..\ReactiveComponentModel\ReactiveComponentModel.csproj" />
   </ItemGroup>
 
 </Project>

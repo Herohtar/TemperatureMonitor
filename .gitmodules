@@ -1,6 +1,3 @@
 [submodule "AlarmDotCom"]
 	path = AlarmDotCom
 	url = https://github.com/Herohtar/AlarmDotCom.git
-[submodule "ReactiveComponentModel"]
-	path = ReactiveComponentModel
-	url = https://github.com/Herohtar/ReactiveComponentModel
