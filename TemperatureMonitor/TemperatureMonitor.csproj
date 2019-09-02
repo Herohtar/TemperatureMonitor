@@ -20,8 +20,4 @@
     <Resource Include="Fonts\DSEG7Classic-Regular.ttf" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AlarmDotCom\AlarmDotCom.csproj" />
-  </ItemGroup>
-
 </Project>
