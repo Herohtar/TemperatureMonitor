@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="AlarmDotCom" Version="1.0.0" />
-    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0455" />
+    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0479" />
     <PackageReference Include="PushBinding" Version="1.2.0" />
     <PackageReference Include="ReactiveComponentModel" Version="1.0.0" />
     <PackageReference Include="System.Reactive" Version="4.2.0-preview.625" />
