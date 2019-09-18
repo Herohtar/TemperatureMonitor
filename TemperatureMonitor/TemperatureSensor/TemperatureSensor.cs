@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Serilog;
 
 namespace TemperatureMonitor
 {
@@ -15,6 +16,9 @@ namespace TemperatureMonitor
 
         public TemperatureSensor(string sensorName, int maxHistoryCount)
         {
+            Log.ForContext<TemperatureSensor>();
+            Log.Debug("TemperatureSensor instance created for {SensorName} with max history of {MaxHistory}", sensorName, maxHistoryCount);
+
             name = sensorName;
 
             maxHistory = maxHistoryCount;
@@ -38,9 +42,11 @@ namespace TemperatureMonitor
         {
             if (!TemperatureReadings.Any(h => h.Time.Equals(reading.Time)))
             {
+                Log.Information("Recording temperature {Temperature} for {Name}", reading.Temperature, Name);
                 TemperatureReadings.Add(reading);
                 if ((maxHistory > 0) && (TemperatureReadings.Count > maxHistory))
                 {
+                    Log.Information("Max history reached; removing oldest reading from {Time}", TemperatureReadings.ElementAt(0).Time);
                     TemperatureReadings.RemoveAt(0);
                 }
 

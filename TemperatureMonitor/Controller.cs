@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TemperatureMonitor.Utilities;
+using Serilog;
 
 namespace TemperatureMonitor
 {
@@ -26,6 +27,9 @@ namespace TemperatureMonitor
 
         public Controller(IDialogCoordinator dialogCoordinator)
         {
+            Log.ForContext<Controller>();
+            Log.Debug("Instance of Controller created");
+
             dialogs = dialogCoordinator;
             Sensors = new ObservableCollection<TemperatureSensor>();
 
@@ -34,29 +38,30 @@ namespace TemperatureMonitor
 
         public async void Start()
         {
-            LoginDialogData data;
+            Log.Information("Starting controller");
 
             var success = false;
             while (!success)
             {
-                data = await dialogs.ShowLoginAsync(this, "Login", string.Empty, new LoginDialogSettings { AnimateShow = false, AnimateHide = false, NegativeButtonText = "Exit", NegativeButtonVisibility = Visibility.Visible });
+                Log.Information("Showing login dialog");
+                var data = await dialogs.ShowLoginAsync(this, "Login", string.Empty, new LoginDialogSettings { AnimateShow = false, AnimateHide = false, NegativeButtonText = "Exit", NegativeButtonVisibility = Visibility.Visible });
                 if (data == null)
                 {
+                    Log.Information("Login canceled - exiting");
                     Application.Current.Shutdown();
                     return;
                 }
                 else
                 {
+                    Log.Information("Got login details");
                     var progress = await dialogs.ShowProgressAsync(this, "Logging in...", "Connecting to Alarm.com", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = false });
                     progress.SetIndeterminate();
 
                     client = new Client(data.Username, data.Password);
-                    try
-                    {
-                        await Task.Run(() => client.Login());
-                        success = true;
-                    }
-                    catch
+
+                    success = await Task.Run(() => client.Login());
+
+                    if (!success)
                     {
                         await progress.CloseAsync();
                         await dialogs.ShowMessageAsync(this, "Error", "There was an error logging you in, please try again.", MessageDialogStyle.Affirmative, new MetroDialogSettings { AnimateShow = false, AnimateHide = false });
@@ -72,6 +77,7 @@ namespace TemperatureMonitor
             var sensorData = client.GetSensorData(0);
             sensorData.ForEach(sensor =>
             {
+                Log.Information("Registering temperature sensor {SensorName}", sensor.Description);
                 var newSensor = new TemperatureSensor(sensor.Description, maxHistory);
                 newSensor.WhenTemperatureRecorded.Subscribe(r =>
                 {
@@ -87,13 +93,16 @@ namespace TemperatureMonitor
             recordTemperatures(sensorData);
 
             Observable.Interval(TimeSpan.FromMinutes(5), DispatcherScheduler.Current).Subscribe(x => recordTemperatures(client.GetSensorData(0)));
+
             Observable.Interval(TimeSpan.FromMinutes(1), DispatcherScheduler.Current).Subscribe(x => client.KeepAlive());
 
             IsStarted = true;
+            Log.Information("Controller started");
         }
 
         private void recordTemperatures(List<TemperatureSensorsDatum> sensorData)
         {
+            Log.Information("Recording temperature readings");
             var pollTime = DateTime.Now; // Reported reading times are inconsistent and incorrect in some cases, so just use the current time when recording
             sensorData.ForEach(sensor =>
             {
@@ -148,7 +157,11 @@ namespace TemperatureMonitor
         public event EventHandler TrayClick;
         public ICommand TrayClickCommand => new Command
         {
-            ExecuteDelegate = p => TrayClick?.Invoke(this, new EventArgs()),
+            ExecuteDelegate = p =>
+            {
+                Log.Information("Tray icon clicked");
+                TrayClick?.Invoke(this, new EventArgs());
+            },
             CanExecuteDelegate = p => true
         };
     }

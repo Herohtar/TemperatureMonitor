@@ -19,6 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Serilog;
 
 namespace TemperatureMonitor
 {
@@ -31,6 +32,9 @@ namespace TemperatureMonitor
 
         public MainWindow()
         {
+            Log.ForContext<MainWindow>();
+            Log.Debug("MainWindow created");
+
             controller = new Controller(DialogCoordinator.Instance);
             DataContext = controller;
 
@@ -39,6 +43,7 @@ namespace TemperatureMonitor
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Log.Debug("MainWindow loaded");
             controller.Start();
         }
     }
