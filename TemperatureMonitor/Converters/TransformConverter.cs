@@ -15,17 +15,24 @@ namespace TemperatureMonitor
         {
             if (value.Length >= 2)
             {
-                var lowerValue = System.Convert.ToDouble(value[0]);
-                var upperValue = System.Convert.ToDouble(value[1]);
-
-                var result = 1 / (upperValue - lowerValue);
-
-                if (System.Convert.ToString(parameter).Equals("translate"))
+                try
                 {
-                    result = -GraphSettings.Width * result * lowerValue;
-                }
+                    var lowerValue = System.Convert.ToDouble(value[0]);
+                    var upperValue = System.Convert.ToDouble(value[1]);
 
-                return result;
+                    var result = 1 / (upperValue - lowerValue);
+
+                    if (System.Convert.ToString(parameter).Equals("translate"))
+                    {
+                        result = -GraphSettings.Width * result * lowerValue;
+                    }
+
+                    return result;
+                }
+                catch
+                {
+                    // Prevent exceptions from being thrown
+                }
             }
 
             return null;
