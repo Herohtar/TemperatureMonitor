@@ -26,9 +26,6 @@
         </Viewbox>
     </UserControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
         <GroupBox Header="{Binding Title, ElementName=self}">
             <GroupBox.HeaderTemplate>
                 <DataTemplate>
