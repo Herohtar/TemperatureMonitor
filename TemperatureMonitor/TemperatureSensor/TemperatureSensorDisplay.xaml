@@ -43,8 +43,8 @@
                 </DataTemplate>
             </GroupBox.HeaderTemplate>
             <Grid Margin="15 0 15 0">
-                <TextBlock Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontFamily="/TemperatureMonitor;component/Fonts/#DSEG7 Classic" Foreground="#0AFFFFFF" Text="888" />
-                <TextBlock Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="/TemperatureMonitor;component/Fonts/#DSEG7 Classic" FontSize="48" Foreground="LightGreen" Text="{Binding CurrentTemperature, Converter={local:TemperatureFormatConverter}}" />
+                <TextBlock Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontFamily="/Fonts/DSEG7Classic-Regular.ttf#DSEG7 Classic" Foreground="#0AFFFFFF" Text="888" />
+                <TextBlock Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="/Fonts/DSEG7Classic-Regular.ttf#DSEG7 Classic" FontSize="48" Foreground="LightGreen" Text="{Binding CurrentTemperature, Converter={local:TemperatureFormatConverter}}" />
             </Grid>
         </GroupBox>
     </Grid>
