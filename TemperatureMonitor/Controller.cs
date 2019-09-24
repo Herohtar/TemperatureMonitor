@@ -18,7 +18,7 @@ namespace TemperatureMonitor
 {
     public class Controller : NotifyDataErrorInfo<Controller>
     {
-        private IDialogCoordinator dialogs;
+        private readonly IDialogCoordinator dialogs;
         private Client client;
 
         private const int maxHistory = 0;

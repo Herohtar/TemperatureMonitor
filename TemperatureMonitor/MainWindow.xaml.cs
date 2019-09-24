@@ -28,7 +28,7 @@ namespace TemperatureMonitor
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private Controller controller;
+        private readonly Controller controller;
 
         public MainWindow()
         {
