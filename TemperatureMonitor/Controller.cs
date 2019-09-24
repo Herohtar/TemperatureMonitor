@@ -153,16 +153,5 @@ namespace TemperatureMonitor
             get => GraphSettings.Min;
             set => SetProperty(() => GraphSettings.Min == value, () => GraphSettings.Min = value);
         }
-
-        public event EventHandler TrayClick;
-        public ICommand TrayClickCommand => new Command
-        {
-            ExecuteDelegate = p =>
-            {
-                Log.Information("Tray icon clicked");
-                TrayClick?.Invoke(this, new EventArgs());
-            },
-            CanExecuteDelegate = p => true
-        };
     }
 }
