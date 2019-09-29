@@ -8,15 +8,9 @@ namespace TemperatureMonitor.Utilities
         public Action<object> ExecuteDelegate { get; set; }
         public Predicate<object> CanExecuteDelegate { get; set; }
 
-        public void Execute(object parameter)
-        {
-            ExecuteDelegate?.Invoke(parameter);
-        }
+        public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
 
-        public bool CanExecute(object parameter)
-        {
-            return (CanExecuteDelegate == null) ? true : CanExecuteDelegate(parameter);
-        }
+        public bool CanExecute(object parameter) => CanExecuteDelegate?.Invoke(parameter) ?? true;
 
         public event EventHandler CanExecuteChanged
         {
