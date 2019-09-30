@@ -9,4 +9,10 @@
         HighAlarm,
         Error
     }
+
+    public enum SensorType
+    {
+        Thermostat,
+        RemoteTemperatureSensor
+    }
 }

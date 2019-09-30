@@ -1,7 +1,7 @@
 ﻿using AlarmDotCom;
-using AlarmDotCom.JsonObjects.ResponseData;
 using MahApps.Metro.Controls.Dialogs;
 using ReactiveComponentModel;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,9 +10,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using TemperatureMonitor.Utilities;
-using Serilog;
 
 namespace TemperatureMonitor
 {
@@ -74,25 +71,23 @@ namespace TemperatureMonitor
                 }
             }
 
-            var sensorData = client.GetSensorData(0);
-            sensorData.ForEach(sensor =>
+            var sensors = getTemperatureSensors();
+            sensors.ForEach(sensor =>
             {
-                Log.Information("Registering temperature sensor {SensorName}", sensor.Description);
-                var newSensor = new TemperatureSensor(sensor.Description, maxHistory);
-                newSensor.WhenTemperatureRecorded.Subscribe(r =>
+                Log.Information("Registering temperature sensor {SensorName}", sensor.Name);
+                sensor.WhenTemperatureRecorded.Subscribe(r =>
                 {
-                    Max = (int)Sensors.SelectMany(s => s.TemperatureReadings).Max(reading => reading.Temperature) + GraphSettings.Buffer;
-                    Min = (int)Sensors.SelectMany(s => s.TemperatureReadings).Where(reading => !double.IsNegativeInfinity(reading.Temperature)).Min(reading => reading.Temperature) - GraphSettings.Buffer;
-                    StartTime = Sensors.SelectMany(s => s.TemperatureReadings).Min(reading => reading.Time);
-                    EndTime = Sensors.SelectMany(s => s.TemperatureReadings).Max(reading => reading.Time);
+                    var readings = Sensors.SelectMany(s => s.TemperatureReadings);
+                    Max = (int)readings.Max(reading => reading.Temperature) + GraphSettings.Buffer;
+                    Min = (int)readings.Where(reading => !double.IsNegativeInfinity(reading.Temperature)).Min(reading => reading.Temperature) - GraphSettings.Buffer;
+                    StartTime = readings.Min(reading => reading.Time);
+                    EndTime = readings.Max(reading => reading.Time);
                 });
 
-                Sensors.Add(newSensor);
+                Sensors.Add(sensor);
             });
 
-            recordTemperatures(sensorData);
-
-            Observable.Interval(TimeSpan.FromMinutes(5), DispatcherScheduler.Current).Subscribe(x => recordTemperatures(client.GetSensorData(0)));
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5), DispatcherScheduler.Current).Subscribe(x => updateTemperatures());
 
             Observable.Interval(TimeSpan.FromMinutes(1), DispatcherScheduler.Current).Subscribe(x => client.KeepAlive());
 
@@ -100,14 +95,46 @@ namespace TemperatureMonitor
             Log.Information("Controller started");
         }
 
-        private void recordTemperatures(List<TemperatureSensorsDatum> sensorData)
+        private List<TemperatureSensor> getTemperatureSensors()
         {
-            Log.Information("Recording temperature readings");
-            var pollTime = DateTime.Now; // Reported reading times are inconsistent and incorrect in some cases, so just use the current time when recording
-            sensorData.ForEach(sensor =>
+            Log.Information("Getting all thermostats and temperature sensors");
+            var systems = from system in client.GetAvailableSystems()
+                          select client.GetSystemData(system);
+
+            var thermostats = from system in systems
+                              from thermostatItem in system.Relationships.Thermostats.Data
+                              select client.GetThermostatData(thermostatItem.Id);
+
+            var temperatureSensors = from system in systems
+                                     from temperatureSensorItem in system.Relationships.RemoteTemperatureSensors.Data
+                                     select client.GetTemperatureSensorData(temperatureSensorItem.Id);
+
+            return (
+                    from thermostat in thermostats
+                    select new TemperatureSensor(thermostat.Id, thermostat.Type, thermostat.Attributes.Description, maxHistory)
+                   ).Concat(
+                    from temperatureSensor in temperatureSensors
+                    select new TemperatureSensor(temperatureSensor.Id, temperatureSensor.Type, temperatureSensor.Attributes.Description, maxHistory)
+                   ).ToList();
+        }
+
+        private void updateTemperatures()
+        {
+            Log.Information("Updating temperature readings");
+            var pollTime = DateTime.Now; // Use a constant time across all readings
+
+            foreach (var sensor in Sensors)
             {
-                Sensors.Single(s => s.Name.Equals(sensor.Description)).RecordTemperature(sensor.LastKnownReading, pollTime);
-            });
+                switch (sensor.Type)
+                {
+                    case SensorType.Thermostat:
+                        sensor.RecordTemperature(client.GetThermostatData(sensor.Id).Attributes.AmbientTemp, pollTime);
+                        break;
+                    case SensorType.RemoteTemperatureSensor:
+                        sensor.RecordTemperature(client.GetTemperatureSensorData(sensor.Id).Attributes.AmbientTemp, pollTime);
+                        break;
+                }
+            }
         }
 
         public ObservableCollection<TemperatureSensor> Sensors { get; }

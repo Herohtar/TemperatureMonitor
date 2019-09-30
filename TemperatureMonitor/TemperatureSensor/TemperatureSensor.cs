@@ -10,20 +10,38 @@ namespace TemperatureMonitor
 {
     public class TemperatureSensor : NotifyDataErrorInfo<TemperatureSensor>
     {
+        private string id;
+        private SensorType type;
         private string name;
         private int maxHistory;
         private Subject<TemperatureReading> temperatureRecorded = new Subject<TemperatureReading>();
 
-        public TemperatureSensor(string sensorName, int maxHistoryCount)
+        public TemperatureSensor(string sensorId, string sensorType, string sensorName, int maxHistoryCount)
         {
             Log.ForContext<TemperatureSensor>();
             Log.Debug("TemperatureSensor instance created for {SensorName} with max history of {MaxHistory}", sensorName, maxHistoryCount);
 
+            id = sensorId;
+
+            type = sensorType.Equals("devices/thermostat") ? SensorType.Thermostat : SensorType.RemoteTemperatureSensor;
+            
             name = sensorName;
 
             maxHistory = maxHistoryCount;
 
             TemperatureReadings = new List<TemperatureReading>();
+        }
+
+        public string Id
+        {
+            get => id;
+            set => SetProperty(ref id, value);
+        }
+
+        public SensorType Type
+        {
+            get => type;
+            set => SetProperty(ref type, value);
         }
 
         public string Name
@@ -52,6 +70,10 @@ namespace TemperatureMonitor
 
                 temperatureRecorded.OnNext(reading);
                 OnPropertyChanged("CurrentTemperature", "TemperatureReadings");
+            }
+            else
+            {
+                Log.Information("{Name} already has a temperature entry for {Time}, not recording", Name, reading.Time);
             }
         }
 
