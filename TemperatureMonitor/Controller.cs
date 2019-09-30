@@ -58,15 +58,11 @@ namespace TemperatureMonitor
 
                     success = await Task.Run(() => client.Login());
 
+                    await progress.CloseAsync();
+
                     if (!success)
                     {
-                        await progress.CloseAsync();
                         await dialogs.ShowMessageAsync(this, "Error", "There was an error logging you in, please try again.", MessageDialogStyle.Affirmative, new MetroDialogSettings { AnimateShow = false, AnimateHide = false });
-                    }
-
-                    if (progress.IsOpen)
-                    {
-                        await progress.CloseAsync();
                     }
                 }
             }
