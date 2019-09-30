@@ -1,4 +1,4 @@
-using AlarmDotCom;
+﻿using AlarmDotCom;
 using MahApps.Metro.Controls.Dialogs;
 using ReactiveComponentModel;
 using Serilog;
@@ -15,6 +15,7 @@ namespace TemperatureMonitor
 {
     public class Controller : NotifyDataErrorInfo<Controller>
     {
+        private readonly object clientLock = new object();
         private readonly IDialogCoordinator dialogs;
         private Client client;
 
@@ -88,7 +89,13 @@ namespace TemperatureMonitor
 
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5)).Subscribe(x => updateTemperatures());
 
-            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => client.KeepAlive());
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x =>
+            {
+                lock (clientLock)
+                {
+                    client.KeepAlive();
+                }
+            });
 
             _ = loadProgress.CloseAsync();
 
@@ -121,19 +128,22 @@ namespace TemperatureMonitor
 
         private void updateTemperatures()
         {
-            Log.Information("Updating temperature readings");
-            var pollTime = DateTime.Now; // Use a constant time across all readings
-
-            foreach (var sensor in Sensors)
+            lock (clientLock)
             {
-                switch (sensor.Type)
+                Log.Information("Updating temperature readings");
+                var pollTime = DateTime.Now; // Use a constant time across all readings
+
+                foreach (var sensor in Sensors)
                 {
-                    case SensorType.Thermostat:
-                        sensor.RecordTemperature(client.GetThermostatData(sensor.Id).Attributes.AmbientTemp, pollTime);
-                        break;
-                    case SensorType.RemoteTemperatureSensor:
-                        sensor.RecordTemperature(client.GetTemperatureSensorData(sensor.Id).Attributes.AmbientTemp, pollTime);
-                        break;
+                    switch (sensor.Type)
+                    {
+                        case SensorType.Thermostat:
+                            sensor.RecordTemperature(client.GetThermostatData(sensor.Id).Attributes.AmbientTemp, pollTime);
+                            break;
+                        case SensorType.RemoteTemperatureSensor:
+                            sensor.RecordTemperature(client.GetTemperatureSensorData(sensor.Id).Attributes.AmbientTemp, pollTime);
+                            break;
+                    }
                 }
             }
         }
