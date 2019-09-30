@@ -70,7 +70,7 @@ namespace TemperatureMonitor
             var loadProgress = await dialogs.ShowProgressAsync(this, "Loading...", "Loading temperature sensor data", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = true });
             loadProgress.SetIndeterminate();
 
-            var sensors = getTemperatureSensors();
+            var sensors = await Task.Run(() => getTemperatureSensors());
             sensors.ForEach(sensor =>
             {
                 Log.Information("Registering temperature sensor {SensorName}", sensor.Name);
