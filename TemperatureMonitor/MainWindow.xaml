@@ -23,7 +23,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ItemsControl ItemsSource="{Binding Sensors}" Grid.RowSpan="3" AlternationCount="2">
+        <ItemsControl ItemsSource="{Binding Sensors}" Grid.RowSpan="3" AlternationCount="2" Padding="5 0 0 5" VerticalAlignment="Center">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel />
@@ -31,11 +31,11 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:TemperatureSensorDisplay Title="{Binding Name}" Index="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}" />
+                    <local:TemperatureSensorDisplay Margin="0 5 0 0" Title="{Binding Name}" Index="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Border Name="Graph" Margin="0 5 5 5" Grid.Column="1" BorderThickness="2" BorderBrush="#3FFFFFFF" CornerRadius="4" ClipToBounds="True">
+        <Border Name="Graph" Margin="5" Grid.Column="1" BorderThickness="2" BorderBrush="#3FFFFFFF" CornerRadius="4" ClipToBounds="True">
             <Grid>
                 <pb:PushBindingManager.PushBindings>
                     <pb:PushBinding TargetProperty="ActualWidth" Path="GraphWidth" />
@@ -118,8 +118,8 @@
                 </ItemsControl>
             </Grid>
         </Border>
-        <Controls:RangeSlider Grid.Column="1" Grid.Row="1" Name="scaleSlider" Margin="0 0 5 5" Minimum="0" Maximum="1" MinRange="0.001" MinRangeWidth="10" LowerValue="0" UpperValue="1" Style="{DynamicResource MahApps.Styles.RangeSlider.Win10}" />
-        <TextBlock Grid.Column="1" Grid.Row="2" Margin="0 0 0 5">
+        <Controls:RangeSlider Grid.Column="1" Grid.Row="1" Name="scaleSlider" Margin="5 0 5 5" Minimum="0" Maximum="1" MinRange="0.001" MinRangeWidth="10" LowerValue="0" UpperValue="1" Style="{DynamicResource MahApps.Styles.RangeSlider.Win10}" />
+        <TextBlock Grid.Column="1" Grid.Row="2" Margin="5 0 0 5">
             <TextBlock.Text>
                 <MultiBinding Converter="{local:SliderConverter}" ConverterParameter="start">
                     <Binding Path="LowerValue" ElementName="scaleSlider" />
