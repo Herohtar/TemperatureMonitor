@@ -1,4 +1,4 @@
-﻿using AlarmDotCom;
+using AlarmDotCom;
 using MahApps.Metro.Controls.Dialogs;
 using ReactiveComponentModel;
 using Serilog;
@@ -67,6 +67,9 @@ namespace TemperatureMonitor
                 }
             }
 
+            var loadProgress = await dialogs.ShowProgressAsync(this, "Loading...", "Loading temperature sensor data", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = true });
+            loadProgress.SetIndeterminate();
+
             var sensors = getTemperatureSensors();
             sensors.ForEach(sensor =>
             {
@@ -86,6 +89,8 @@ namespace TemperatureMonitor
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5), DispatcherScheduler.Current).Subscribe(x => updateTemperatures());
 
             Observable.Interval(TimeSpan.FromMinutes(1), DispatcherScheduler.Current).Subscribe(x => client.KeepAlive());
+
+            _ = loadProgress.CloseAsync();
 
             IsStarted = true;
             Log.Information("Controller started");
