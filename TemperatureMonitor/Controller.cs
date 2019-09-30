@@ -86,9 +86,9 @@ namespace TemperatureMonitor
                 Sensors.Add(sensor);
             });
 
-            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5), DispatcherScheduler.Current).Subscribe(x => updateTemperatures());
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5)).Subscribe(x => updateTemperatures());
 
-            Observable.Interval(TimeSpan.FromMinutes(1), DispatcherScheduler.Current).Subscribe(x => client.KeepAlive());
+            Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x => client.KeepAlive());
 
             _ = loadProgress.CloseAsync();
 
