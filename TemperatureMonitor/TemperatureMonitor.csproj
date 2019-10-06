@@ -8,6 +8,7 @@
     <PublishReadyToRun>true</PublishReadyToRun>
     <UseWPF>true</UseWPF>
     <StartupObject>TemperatureMonitor.EntryPoint</StartupObject>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using TemperatureMonitor.Utilities;
 
@@ -22,7 +23,7 @@ namespace TemperatureMonitor
 
                     var result = 1 / (upperValue - lowerValue);
 
-                    if (System.Convert.ToString(parameter).Equals("translate"))
+                    if (parameter.Equals("translate"))
                     {
                         result = -GraphSettings.Width * result * lowerValue;
                     }
@@ -35,10 +36,10 @@ namespace TemperatureMonitor
                 }
             }
 
-            return null;
+            return DependencyProperty.UnsetValue;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object[]? ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             return null;
         }

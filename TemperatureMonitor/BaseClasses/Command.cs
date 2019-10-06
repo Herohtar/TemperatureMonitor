@@ -5,8 +5,8 @@ namespace TemperatureMonitor.Utilities
 {
     public class Command : ICommand
     {
-        public Action<object> ExecuteDelegate { get; set; }
-        public Predicate<object> CanExecuteDelegate { get; set; }
+        public Action<object>? ExecuteDelegate { get; set; }
+        public Predicate<object>? CanExecuteDelegate { get; set; }
 
         public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
 

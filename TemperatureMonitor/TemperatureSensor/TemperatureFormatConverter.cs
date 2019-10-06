@@ -27,7 +27,7 @@ namespace TemperatureMonitor
             return temperature.ToString("0").PadLeft(3, '!');
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
         }

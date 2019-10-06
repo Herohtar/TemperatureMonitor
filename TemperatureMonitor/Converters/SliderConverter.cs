@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using TemperatureMonitor.Utilities;
 
@@ -21,10 +22,10 @@ namespace TemperatureMonitor
                 return GraphSettings.Start.AddSeconds(difference * sliderValue).ToString();
             }
 
-            return null;
+            return DependencyProperty.UnsetValue;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object[]? ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             return null;
         }

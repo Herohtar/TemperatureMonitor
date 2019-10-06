@@ -19,7 +19,7 @@ namespace TemperatureMonitor
 
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-            PathFigureCollection figures = null;
+            var figures = new PathFigureCollection();
 
             if (value.Length >= 2)
             {
@@ -27,8 +27,6 @@ namespace TemperatureMonitor
                 double upperValue = System.Convert.ToDouble(value[1]);
                 double scale = upperValue - lowerValue;
                 double interval;
-
-                figures = new PathFigureCollection();
 
                 PathFigure figure;
                 double dataWidth = (GraphSettings.End - GraphSettings.Start).TotalSeconds;
@@ -102,7 +100,7 @@ namespace TemperatureMonitor
             return interval;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object[]? ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             return null;
         }
