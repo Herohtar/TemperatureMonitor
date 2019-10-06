@@ -17,7 +17,7 @@ namespace TemperatureMonitor
     {
         private readonly object clientLock = new object();
         private readonly IDialogCoordinator dialogs;
-        private Client client;
+        private readonly Client client = new Client();
 
         private const int maxHistory = 0;
 
@@ -55,9 +55,7 @@ namespace TemperatureMonitor
                     var progress = await dialogs.ShowProgressAsync(this, "Logging in...", "Connecting to Alarm.com", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = false });
                     progress.SetIndeterminate();
 
-                    client = new Client(data.Username, data.Password);
-
-                    success = await Task.Run(() => client.Login());
+                    success = await Task.Run(() => client.Login(data.Username, data.Password));
 
                     await progress.CloseAsync();
 
