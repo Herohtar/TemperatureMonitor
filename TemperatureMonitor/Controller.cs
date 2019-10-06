@@ -25,7 +25,6 @@ namespace TemperatureMonitor
 
         public Controller(IDialogCoordinator dialogCoordinator)
         {
-            Log.ForContext<Controller>();
             Log.Debug("Instance of Controller created");
 
             dialogs = dialogCoordinator;

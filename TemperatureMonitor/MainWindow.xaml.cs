@@ -32,7 +32,6 @@ namespace TemperatureMonitor
 
         public MainWindow()
         {
-            Log.ForContext<MainWindow>();
             Log.Debug("MainWindow created");
 
             controller = new Controller(DialogCoordinator.Instance);

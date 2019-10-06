@@ -18,7 +18,6 @@ namespace TemperatureMonitor
 
         public TemperatureSensor(string sensorId, string sensorType, string sensorName, int maxHistoryCount)
         {
-            Log.ForContext<TemperatureSensor>();
             Log.Debug("TemperatureSensor instance created for {SensorName} with max history of {MaxHistory}", sensorName, maxHistoryCount);
 
             id = sensorId;
