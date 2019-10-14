@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace TemperatureMonitor
@@ -24,6 +25,10 @@ namespace TemperatureMonitor
                 .CreateLogger();
 
             Log.Information("Program start");
+
+            Log.Information("Initializing database");
+            using var db = new TemperatureSensorContext();
+            db.Database.Migrate();
 
             try
             {
