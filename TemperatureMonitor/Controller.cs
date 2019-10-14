@@ -116,10 +116,10 @@ namespace TemperatureMonitor
 
             return (
                     from thermostat in thermostats
-                    select new TemperatureSensor(thermostat.Id, thermostat.Type, thermostat.Attributes.Description, maxHistory)
+                    select new TemperatureSensor(thermostat.Id, thermostat.Type.Equals("devices/thermostat") ? SensorType.Thermostat : SensorType.RemoteTemperatureSensor, thermostat.Attributes.Description, maxHistory)
                    ).Concat(
                     from temperatureSensor in temperatureSensors
-                    select new TemperatureSensor(temperatureSensor.Id, temperatureSensor.Type, temperatureSensor.Attributes.Description, maxHistory)
+                    select new TemperatureSensor(temperatureSensor.Id, temperatureSensor.Type.Equals("devices/thermostat") ? SensorType.Thermostat : SensorType.RemoteTemperatureSensor, temperatureSensor.Attributes.Description, maxHistory)
                    ).ToList();
         }
 
