@@ -16,17 +16,22 @@ namespace TemperatureMonitor
         private int maxHistory;
         private Subject<TemperatureReading> temperatureRecorded = new Subject<TemperatureReading>();
 
-        public TemperatureSensor(string sensorId, string sensorType, string sensorName, int maxHistoryCount)
+        public TemperatureSensor(string id, SensorType type, string name) : this(id, type, name, 0)
         {
-            Log.Debug("TemperatureSensor instance created for {SensorName} with max history of {MaxHistory}", sensorName, maxHistoryCount);
 
-            id = sensorId;
+        }
+        
+        public TemperatureSensor(string id, SensorType type, string name, int maxHistory)
+        {
+            Log.Debug("TemperatureSensor instance created for {SensorName} with max history of {MaxHistory}", name, maxHistory);
 
-            type = sensorType.Equals("devices/thermostat") ? SensorType.Thermostat : SensorType.RemoteTemperatureSensor;
+            this.id = id;
+
+            this.type = type;
             
-            name = sensorName;
+            this.name = name;
 
-            maxHistory = maxHistoryCount;
+            this.maxHistory = maxHistory;
 
             TemperatureReadings = new List<TemperatureReading>();
         }
