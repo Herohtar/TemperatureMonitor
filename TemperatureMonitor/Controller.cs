@@ -75,20 +75,32 @@ namespace TemperatureMonitor
                 Log.Information("Registering temperature sensor {SensorName}", sensor.Name);
                 sensor.WhenTemperatureRecorded.Subscribe(r =>
                 {
-                    var readings = Sensors.SelectMany(s => s.TemperatureReadings);
-                    Max = (int)readings.Max(reading => reading.Temperature) + GraphSettings.Buffer;
-                    Min = (int)readings.Where(reading => !double.IsNegativeInfinity(reading.Temperature)).Min(reading => reading.Temperature) - GraphSettings.Buffer;
-                    StartTime = readings.Min(reading => reading.Time);
-                    EndTime = readings.Max(reading => reading.Time);
+                    using var db = new TemperatureSensorContext();
+                    db.Attach(sensor);
+                    db.SaveChanges();
                 });
 
                 using var db = new TemperatureSensorContext();
-                db.Add(sensor);
+                var existing = db.TemperatureSensors.Include(s => s.TemperatureReadings).Where(s => s.Id.Equals(sensor.Id)).SingleOrDefault();
+                if (existing == null)
+                {
+                    db.Add(sensor);
+                    Sensors.Add(sensor);
+                }
+                else
+                {
+                    existing.Name = sensor.Name;
+                    existing.Type = sensor.Type;
+                    Sensors.Add(existing);
+                }
                 db.SaveChanges();
-                Sensors.Add(sensor);
             });
 
-            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5)).Subscribe(x => updateTemperatures());
+            Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5)).Subscribe(x =>
+            {
+                updateTemperatures();
+                updateGraphBounds();
+            });
 
             Observable.Interval(TimeSpan.FromMinutes(1)).Subscribe(x =>
             {
@@ -102,6 +114,15 @@ namespace TemperatureMonitor
 
             IsStarted = true;
             Log.Information("Controller started");
+        }
+
+        private void updateGraphBounds()
+        {
+            var readings = Sensors.SelectMany(s => s.TemperatureReadings);
+            Max = (int)readings.Max(reading => reading.Temperature) + GraphSettings.Buffer;
+            Min = (int)readings.Where(reading => !double.IsNegativeInfinity(reading.Temperature)).Min(reading => reading.Temperature) - GraphSettings.Buffer;
+            StartTime = readings.Min(reading => reading.Time);
+            EndTime = readings.Max(reading => reading.Time);
         }
 
         private List<TemperatureSensor> getTemperatureSensors()
