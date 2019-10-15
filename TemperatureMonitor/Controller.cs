@@ -1,5 +1,6 @@
 ﻿using AlarmDotCom;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.EntityFrameworkCore;
 using ReactiveComponentModel;
 using Serilog;
 using System;
@@ -81,6 +82,9 @@ namespace TemperatureMonitor
                     EndTime = readings.Max(reading => reading.Time);
                 });
 
+                using var db = new TemperatureSensorContext();
+                db.Add(sensor);
+                db.SaveChanges();
                 Sensors.Add(sensor);
             });
 
