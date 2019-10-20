@@ -1,4 +1,4 @@
-using AlarmDotCom;
+﻿using AlarmDotCom;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.EntityFrameworkCore;
 using ReactiveComponentModel;
@@ -69,10 +69,25 @@ namespace TemperatureMonitor
             var loadProgress = await dialogs.ShowProgressAsync(this, "Loading...", "Loading temperature sensor data", false, new MetroDialogSettings { AnimateShow = false, AnimateHide = true });
             loadProgress.SetIndeterminate();
 
-            var sensors = await Task.Run(() => getTemperatureSensors());
-            sensors.ForEach(sensor =>
+            var sensors = await Task.Run(() => getTemperatureSensorData());
+            foreach (var sensorData in sensors)
             {
-                Log.Information("Registering temperature sensor {SensorName}", sensor.Name);
+                Log.Information("Registering temperature sensor {SensorName}", sensorData.Name);
+                using var db = new TemperatureSensorContext();
+                var sensor = db.TemperatureSensors.Include(s => s.TemperatureReadings).Where(s => s.Id.Equals(sensorData.Id)).SingleOrDefault();
+                if (sensor == null)
+                {
+                    sensor = new TemperatureSensor(sensorData.Id, sensorData.Type, sensorData.Name, maxHistory);
+                    db.Add(sensor);
+                }
+                else
+                {
+                    sensor.Name = sensorData.Name;
+                    sensor.Type = sensorData.Type;
+                }
+
+                db.SaveChanges();
+
                 sensor.WhenTemperatureRecorded.Subscribe(r =>
                 {
                     using var db = new TemperatureSensorContext();
@@ -80,21 +95,8 @@ namespace TemperatureMonitor
                     db.SaveChanges();
                 });
 
-                using var db = new TemperatureSensorContext();
-                var existing = db.TemperatureSensors.Include(s => s.TemperatureReadings).Where(s => s.Id.Equals(sensor.Id)).SingleOrDefault();
-                if (existing == null)
-                {
-                    db.Add(sensor);
-                    Sensors.Add(sensor);
-                }
-                else
-                {
-                    existing.Name = sensor.Name;
-                    existing.Type = sensor.Type;
-                    Sensors.Add(existing);
-                }
-                db.SaveChanges();
-            });
+                Sensors.Add(sensor);
+            }
 
             Observable.Timer(TimeSpan.Zero, TimeSpan.FromMinutes(5)).Subscribe(x =>
             {
