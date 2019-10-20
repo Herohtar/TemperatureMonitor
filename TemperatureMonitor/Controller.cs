@@ -1,4 +1,4 @@
-﻿using AlarmDotCom;
+using AlarmDotCom;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.EntityFrameworkCore;
 using ReactiveComponentModel;
@@ -125,7 +125,7 @@ namespace TemperatureMonitor
             EndTime = readings.Max(reading => reading.Time);
         }
 
-        private List<TemperatureSensor> getTemperatureSensors()
+        private IEnumerable<(string Id, SensorType Type, string Name)> getTemperatureSensorData()
         {
             Log.Information("Getting all thermostats and temperature sensors");
             var systems = from system in client.GetAvailableSystems()
@@ -141,11 +141,11 @@ namespace TemperatureMonitor
 
             return (
                     from thermostat in thermostats
-                    select new TemperatureSensor(thermostat.Id, thermostat.Type.Equals("devices/thermostat") ? SensorType.Thermostat : SensorType.RemoteTemperatureSensor, thermostat.Attributes.Description, maxHistory)
+                    select (thermostat.Id, SensorType.Thermostat, thermostat.Attributes.Description)
                    ).Concat(
                     from temperatureSensor in temperatureSensors
-                    select new TemperatureSensor(temperatureSensor.Id, temperatureSensor.Type.Equals("devices/thermostat") ? SensorType.Thermostat : SensorType.RemoteTemperatureSensor, temperatureSensor.Attributes.Description, maxHistory)
-                   ).ToList();
+                    select (temperatureSensor.Id, SensorType.RemoteTemperatureSensor, temperatureSensor.Attributes.Description)
+                   );
         }
 
         private void updateTemperatures()
