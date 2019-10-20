@@ -13,12 +13,12 @@
 
   <ItemGroup>
     <PackageReference Include="AlarmDotCom" Version="3.0.0" />
-    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0490" />
+    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0531" />
     <PackageReference Include="PushBinding" Version="1.2.0" />
     <PackageReference Include="ReactiveComponentModel" Version="1.0.0" />
-    <PackageReference Include="Serilog" Version="2.8.0" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.4.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     <PackageReference Include="System.Reactive" Version="4.2.0" />
   </ItemGroup>
 
