@@ -70,10 +70,10 @@ namespace TemperatureMonitor
             loadProgress.SetIndeterminate();
 
             var sensors = await Task.Run(() => getTemperatureSensorData());
+            using var db = new TemperatureSensorContext();
             foreach (var sensorData in sensors)
             {
                 Log.Information("Registering temperature sensor {SensorName}", sensorData.Name);
-                using var db = new TemperatureSensorContext();
                 var sensor = db.TemperatureSensors.Include(s => s.TemperatureReadings).Where(s => s.Id.Equals(sensorData.Id)).SingleOrDefault();
                 if (sensor == null)
                 {
